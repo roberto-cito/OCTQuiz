@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Errore | OCT</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="icon" type="image/png" th:href="@{/photo/logo.png}">
+    <style>
+        .error-container {
+            min-height: calc(100vh - 200px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-32);
+            text-align: center;
+        }
+        .error-content {
+            max-width: 600px;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="~{fragments/header :: minimal}"></div>
+
+    <main class="error-container">
+        <div class="error-content">
+            <h1 class="hero-title" style="margin-bottom: var(--space-16);">
+                Si è verificato un <span class="highlight">Errore</span>
+            </h1>
+            <p class="hero-subtitle" style="margin-bottom: var(--space-32);">
+                Ci scusiamo per l'inconveniente. Si è verificato un errore inaspettato. 
+                Se il problema persiste, contatta il supporto.
+            </p>
+            <div class="hero-buttons" style="justify-content: center;">
+                <a th:href="@{/}" class="btn btn-primary btn-large">
+                    Torna alla Home
+                </a>
+                <a th:href="@{/support}" class="btn btn-secondary btn-large">
+                    Contatta Supporto
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <div th:replace="~{fragments/footer}"></div>
+</body>
+</html>

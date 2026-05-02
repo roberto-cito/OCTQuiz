@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCT - Termini e Condizioni</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/terms.css}">
+    <link rel="icon" type="image/png" th:href="@{/photo/logo.png}">
+</head>
+<body>
+
+<header th:replace="${isLogged}
+    ? ~{fragments/header :: logged(user=${user})}
+    : ~{fragments/header :: public}">
+</header>
+
+<!-- Main Content -->
+<div style="margin-top: 100px;"> <!-- Spacing for fixed header -->
+    <section class="terms-section">
+        <h1 class="terms-title">Termini e Condizioni</h1>
+        <p class="terms-date">Ultimo aggiornamento: 4 Febbraio 2026</p>
+
+        <div class="terms-content">
+            <h2>1. Accettazione dei Termini</h2>
+            <p>Accedendo e utilizzando il sito OCT Quiz, l'utente accetta di essere vincolato dai presenti Termini e Condizioni, da tutte le leggi e dai regolamenti applicabili.</p>
+
+            <h2>2. Descrizione del Servizio</h2>
+            <p>OCT Quiz è una piattaforma di allenamento progettata per supportare gli studenti nella preparazione alle Olimpiadi della Cultura e del Talento. Il servizio include l'accesso a quiz tematici, monitoraggio dei progressi e materiali di studio.</p>
+
+            <h2>3. Registrazione e Account</h2>
+            <p>Per accedere ad alcune funzionalità, è necessario registrarsi. L'utente è responsabile di:</p>
+            <ul>
+                <li>Mantenere la riservatezza delle proprie credenziali di accesso.</li>
+                <li>Fornire informazioni accurate e complete durante la registrazione.</li>
+                <li>Tutte le attività che avvengono sotto il proprio account.</li>
+            </ul>
+
+            <h2>4. Proprietà Intellettuale</h2>
+            <p>Tutti i contenuti presenti sul sito, inclusi testi, domande dei quiz, loghi e grafica, sono di proprietà di OCT - Olimpiadi della Cultura e del Talento e sono protetti dalle leggi sul diritto d'autore. È vietata la riproduzione o la distribuzione non autorizzata dei contenuti.</p>
+
+            <h2>5. Utilizzo Consentito</h2>
+            <p>L'utente si impegna a utilizzare il sito esclusivamente per scopi educativi e personali. È vietato:</p>
+            <ul>
+                <li>Utilizzare il sito in modo da danneggiare, disabilitare o sovraccaricare i server.</li>
+                <li>Tentare di accedere senza autorizzazione a qualsiasi parte del sito o ad altri account.</li>
+                <li>Utilizzare sistemi automatizzati (bot) per estrarre dati o interagire con i quiz.</li>
+            </ul>
+
+            <h2>6. Limitazione di Responsabilità</h2>
+            <p>OCT Quiz viene fornito "così com'è". Nonostante il nostro impegno per garantire l'accuratezza delle domande, non garantiamo che il servizio sia privo di errori o interruzioni. Non saremo responsabili per eventuali danni derivanti dall'uso o dall'impossibilità di usare il sito.</p>
+
+            <h2>7. Modifiche ai Termini</h2>
+            <p>Ci riserviamo il diritto di modificare questi termini in qualsiasi momento. Le modifiche saranno pubblicate su questa pagina con la data di aggiornamento. L'uso continuato del sito dopo tali modifiche costituisce l'accettazione dei nuovi termini.</p>
+
+            <h2>8. Contatti</h2>
+            <p>Per qualsiasi domanda relativa ai presenti Termini e Condizioni, è possibile contattarci tramite la sezione Supporto del sito.</p>
+        </div>
+    </section>
+</div>
+
+<div th:replace="~{fragments/footer}"></div>
+
+<!-- Modals for Public Header -->
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title">Accedi</h2>
+            <button class="modal-close" onclick="closeModal('login')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>Benvenuto! Accedi al tuo account per continuare il tuo allenamento.</p>
+            <form method="POST" th:action="@{/login}">
+                <div class="form-group">
+                    <label class="form-label" for="email">Email</label>
+                    <input type="email" id="email" name="username" class="form-input" placeholder="tua@email.it">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input type="password" id="password" name="password" class="form-input" placeholder="••••••••">
+                </div>
+                <div class="form-group" style="text-align: right;">
+                    <a href="#" onclick="openModal('forgotPassword')" class="form-link">Password dimenticata?</a>
+                </div>
+                <button type="submit" class="btn btn-primary btn-large" style="width: 100%;">
+                    Accedi
+                </button>
+                <div class="form-group" style="text-align: center; margin-top: var(--space-16);">
+                    <a href="#" onclick="openModal('register')" class="form-link">Non hai un account? Registrati</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="registerModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title">Registrati</h2>
+            <button class="modal-close" onclick="closeModal('register')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>Crea il tuo account gratuito e inizia subito il tuo percorso verso le Olimpiadi!</p>
+            <form method="post" th:action="@{/register}" th:object="${registerForm}">
+                <div class="form-group">
+                    <label class="form-label" for="registerName">Nome</label>
+                    <input type="text" id="registerName" th:field="*{registerName}" class="form-input" placeholder="Mario">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="registerSurname">Cognome</label>
+                    <input type="text" id="registerSurname" th:field="*{registerSurname}" class="form-input" placeholder="Rossi">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" th:field="*{registerEmail}" class="form-input" placeholder="tua@email.it">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="registerPassword">Password</label>
+                    <input type="password" id="registerPassword" th:field="*{registerPassword}" class="form-input" placeholder="••••••••">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="registerPasswordConfirm">Conferma Password</label>
+                    <input type="password" id="registerPasswordConfirm" th:field="*{registerPasswordConfirm}" class="form-input" placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn btn-primary btn-large" style="width: 100%;">
+                    Crea Account
+                </button>
+                <div class="form-group" style="text-align: center; margin-top: var(--space-16);">
+                    <a href="#" onclick="openModal('login')" class="form-link">Hai già un account? Accedi</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="forgotPasswordModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title">Password Dimenticata</h2>
+            <button class="modal-close" onclick="closeModal('forgotPassword')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>Inserisci il tuo indirizzo email per ricevere le istruzioni per reimpostare la password.</p>
+            <form method="post" th:action="@{/forgot-password}">
+                <div class="form-group">
+                    <label class="form-label" for="forgotPasswordEmail">Email</label>
+                    <input type="email" id="forgotPasswordEmail" name="email" class="form-input" placeholder="tua@email.it">
+                </div>
+                <button type="submit" class="btn btn-primary btn-large" style="width: 100%;">
+                    Invia Istruzioni
+                </button>
+                <div class="form-group" style="text-align: center; margin-top: var(--space-16);">
+                    <a href="#" onclick="openModal('login')" class="form-link">Torna al Login</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Modal Logic (Reused from faq.html)
+    function openModal(type) {
+        const modal = document.getElementById(type + 'Modal');
+        if (!modal) return;
+
+        document.querySelectorAll('.modal.active').forEach(activeModal => {
+            if (activeModal.id !== modal.id) {
+                closeModal(activeModal.id.replace('Modal', ''));
+            }
+        });
+
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(type) {
+        const modal = document.getElementById(type + 'Modal');
+        if (modal) {
+            modal.classList.remove('active');
+            if (!document.querySelector('.modal.active')) {
+                document.body.style.overflow = '';
+            }
+        }
+    }
+
+    document.querySelectorAll('.modal').forEach(modal => {
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModal(modal.id.replace('Modal', ''));
+            }
+        });
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            const activeModal = document.querySelector('.modal.active');
+            if (activeModal) {
+                closeModal(activeModal.id.replace('Modal', ''));
+            }
+        }
+    });
+
+    window.addEventListener('scroll', () => {
+        const header = document.querySelector('.header');
+        if(header) {
+            if (window.scrollY > 10) {
+                header.style.boxShadow = 'var(--shadow-md)';
+            } else {
+                header.style.boxShadow = 'none';
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

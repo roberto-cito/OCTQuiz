@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'OCT - ' + ${category.nome}">OCT - Categoria</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/admin-category.css}">
+    <link rel="icon" type="image/png" th:href="@{/photo/logo.png}">
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: logged(user=${user})}"></div>
+
+<main class="admin-container">
+    <div class="admin-header">
+        <div class="breadcrumb">
+            <a th:href="@{/admin/categories}">Categorie</a> / <span th:text="${category.nome}">Categoria</span>
+        </div>
+        <div class="header-actions">
+            <h1 class="section-title" th:text="${category.nome}">Dettaglio Categoria</h1>
+            <div class="header-buttons">
+                <button class="btn btn-primary" onclick="openAddQuestionModal()">Aggiungi Domanda</button>
+                <button class="btn btn-secondary" onclick="openAddTextQuestionModal()">Aggiungi Testo</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="category-info-card">
+        <div class="info-item">
+            <span class="info-label">Tempo:</span>
+            <span class="info-value" th:text="${category.getHour()+'h '+category.getRemainMinute()+'m'}">30 secondi</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Stato:</span>
+            <span class="badge-status" 
+                  th:classappend="${category.visibile ? 'badge-visible' : 'badge-hidden'}"
+                  th:text="${category.visibile ? 'Visibile' : 'Nascosta'}">STATO</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Totale Domande:</span>
+            <span class="info-value" th:text="${domande.size()}">0</span>
+        </div>
+    </div>
+
+    <div class="questions-section">
+        <h2 class="subsection-title">Elenco Domande</h2>
+        
+        <div th:if="${domande.isEmpty()}" class="empty-state">
+            <p>Non ci sono domande in questa categoria. Aggiungine una per iniziare.</p>
+        </div>
+
+        <div class="questions-grid" th:unless="${domande.isEmpty()}">
+            <div th:each="d : ${domande}" class="question-card" th:classappend="${d.onlyText ? 'question-card-textonly' : ''}">
+                <div class="question-header">
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <span class="question-id" th:text="'ID: ' + ${d.id}">ID</span>
+                        <span th:if="${d.onlyText}" class="badge-status badge-onlytext">Solo Testo</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:4px;">
+                        <button th:if="${!d.onlyText}" class="btn-edit-small" th:onclick="openEditQuestionModal([[${d.id}]], [[${d.domanda}]], [[${d.risposta1}]], [[${d.risposta2}]], [[${d.risposta3}]], [[${d.risposta4}]], [[${d.rispostaCorretta}]])" title="Modifica Domanda">
+                            ✎
+                        </button>
+                        <button th:if="${d.onlyText}" class="btn-edit-small" th:onclick="openEditTextQuestionModal([[${d.id}]], [[${d.domanda}]])" title="Modifica Testo">
+                            ✎
+                        </button>
+                        <button class="btn-delete-small" th:onclick="removeQuestion([[${d.id}]])" title="Elimina Domanda">
+                            &times;
+                        </button>
+                    </div>
+                </div>
+                <div class="question-body">
+                    <p class="question-text" th:text="${d.domanda}">Testo della domanda</p>
+                    <div th:if="${d.foto != null and !d.foto.isEmpty()}" class="question-image">
+                        <img th:src="@{/{path}(path=${d.foto})}" alt="Foto domanda">
+                    </div>
+                    <div th:if="${d.audio != null and !d.audio.isEmpty()}" class="question-audio">
+                        <audio controls>
+                            <source th:src="@{/{path}(path=${d.audio})}" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>
+                    <ul th:unless="${d.onlyText}" class="answers-list">
+                        <li th:text="${d.risposta1}" th:classappend="${d.rispostaCorretta == 1 ? 'correct-answer' : ''}">Risposta 1</li>
+                        <li th:text="${d.risposta2}" th:classappend="${d.rispostaCorretta == 2 ? 'correct-answer' : ''}">Risposta 2</li>
+                        <li th:text="${d.risposta3}" th:classappend="${d.rispostaCorretta == 3 ? 'correct-answer' : ''}">Risposta 3</li>
+                        <li th:text="${d.risposta4}" th:classappend="${d.rispostaCorretta == 4 ? 'correct-answer' : ''}">Risposta 4</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Modale Aggiungi Domanda -->
+<div id="addQuestionModal" class="modal">
+    <div class="modal-content modal-lg">
+        <div class="modal-header">
+            <h2 class="modal-title">Aggiungi Nuova Domanda</h2>
+            <button class="modal-close" onclick="closeAddQuestionModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="addQuestionForm" enctype="multipart/form-data">
+                <input type="hidden" name="id_categoria" th:value="${category.id}">
+                
+                <div class="form-group">
+                    <label class="form-label" for="domanda">Testo della Domanda</label>
+                    <textarea id="domanda" name="domanda" class="form-input" rows="3" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="foto">Foto (opzionale)</label>
+                    <input type="file" id="foto" name="foto" class="form-input" accept="image/*">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="audio">Audio (opzionale)</label>
+                    <input type="file" id="audio" name="audio" class="form-input" accept="audio/mp3, audio/wav">
+                </div>
+
+                <div class="answers-grid">
+                    <div class="form-group">
+                        <label class="form-label" for="risposta1">Risposta 1</label>
+                        <input type="text" id="risposta1" name="risposta1" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="risposta2">Risposta 2</label>
+                        <input type="text" id="risposta2" name="risposta2" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="risposta3">Risposta 3</label>
+                        <input type="text" id="risposta3" name="risposta3" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="risposta4">Risposta 4</label>
+                        <input type="text" id="risposta4" name="risposta4" class="form-input" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Risposta Corretta</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="rispostaCorretta" value="1" required> 1</label>
+                        <label><input type="radio" name="rispostaCorretta" value="2"> 2</label>
+                        <label><input type="radio" name="rispostaCorretta" value="3"> 3</label>
+                        <label><input type="radio" name="rispostaCorretta" value="4"> 4</label>
+                    </div>
+                </div>
+
+                <div style="margin-top: var(--space-24);">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Aggiungi Domanda</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modale Aggiungi Domanda Solo Testo -->
+<div id="addTextQuestionModal" class="modal">
+    <div class="modal-content modal-lg">
+        <div class="modal-header">
+            <h2 class="modal-title">Aggiungi Testo Informativo</h2>
+            <button class="modal-close" onclick="closeAddTextQuestionModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="addTextQuestionForm">
+                <input type="hidden" name="id_categoria" th:value="${category.id}">
+                
+                <div class="form-group">
+                    <label class="form-label" for="domandaText">Testo</label>
+                    <textarea id="domandaText" name="domanda" class="form-input" rows="5" required></textarea>
+                </div>
+
+                <div style="margin-top: var(--space-24);">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Aggiungi Testo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modale Modifica Domanda -->
+<div id="editQuestionModal" class="modal">
+    <div class="modal-content modal-lg">
+        <div class="modal-header">
+            <h2 class="modal-title">Modifica Domanda</h2>
+            <button class="modal-close" onclick="closeEditQuestionModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="editQuestionForm" enctype="multipart/form-data">
+                <input type="hidden" name="id_categoria" th:value="${category.id}">
+                <input type="hidden" id="edit_id_domanda" name="id_domanda">
+                
+                <div class="form-group">
+                    <label class="form-label" for="edit_domanda">Testo della Domanda</label>
+                    <textarea id="edit_domanda" name="domanda" class="form-input" rows="3" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="edit_foto">Foto</label>
+                    <input type="file" id="edit_foto" name="foto" class="form-input" accept="image/*">
+                    <div style="margin-top: 8px;">
+                        <label style="display: flex; align-items: center; gap: 8px; font-size: 0.9rem;">
+                            <input type="checkbox" name="delete_photo" value="true"> Elimina foto attuale
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="edit_audio">Audio</label>
+                    <input type="file" id="edit_audio" name="audio" class="form-input" accept="audio/mp3, audio/wav">
+                    <div style="margin-top: 8px;">
+                        <label style="display: flex; align-items: center; gap: 8px; font-size: 0.9rem;">
+                            <input type="checkbox" name="delete_audio" value="true"> Elimina audio attuale
+                        </label>
+                    </div>
+                </div>
+
+                <div class="answers-grid">
+                    <div class="form-group">
+                        <label class="form-label" for="edit_risposta1">Risposta 1</label>
+                        <input type="text" id="edit_risposta1" name="risposta1" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="edit_risposta2">Risposta 2</label>
+                        <input type="text" id="edit_risposta2" name="risposta2" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="edit_risposta3">Risposta 3</label>
+                        <input type="text" id="edit_risposta3" name="risposta3" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="edit_risposta4">Risposta 4</label>
+                        <input type="text" id="edit_risposta4" name="risposta4" class="form-input" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Risposta Corretta</label>
+                    <div class="radio-group" id="edit_radio_group">
+                        <label><input type="radio" name="rispostaCorretta" value="1" required> 1</label>
+                        <label><input type="radio" name="rispostaCorretta" value="2"> 2</label>
+                        <label><input type="radio" name="rispostaCorretta" value="3"> 3</label>
+                        <label><input type="radio" name="rispostaCorretta" value="4"> 4</label>
+                    </div>
+                </div>
+
+                <div style="margin-top: var(--space-24);">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Modifica Domanda</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modale Modifica Domanda Solo Testo -->
+<div id="editTextQuestionModal" class="modal">
+    <div class="modal-content modal-lg">
+        <div class="modal-header">
+            <h2 class="modal-title">Modifica Testo Informativo</h2>
+            <button class="modal-close" onclick="closeEditTextQuestionModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="editTextQuestionForm">
+                <input type="hidden" name="id_categoria" th:value="${category.id}">
+                <input type="hidden" id="edit_text_id_domanda" name="id_domanda">
+                
+                <div class="form-group">
+                    <label class="form-label" for="edit_testo">Testo</label>
+                    <textarea id="edit_testo" name="testo" class="form-input" rows="5" required></textarea>
+                </div>
+
+                <div style="margin-top: var(--space-24);">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Modifica Testo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer}"></div>
+
+<script th:inline="javascript">
+    const csrfParam = /*[[${_csrf?.parameterName}]]*/ '_csrf';
+    const csrfToken = /*[[${_csrf?.token}]]*/ '';
+
+    function appendCsrfToFormData(formData) {
+        if (csrfToken) formData.append(csrfParam, csrfToken);
+    }
+    function openAddQuestionModal() {
+        document.getElementById('addQuestionModal').classList.add('active');
+    }
+
+    function closeAddQuestionModal() {
+        document.getElementById('addQuestionModal').classList.remove('active');
+    }
+
+    function openAddTextQuestionModal() {
+        document.getElementById('addTextQuestionModal').classList.add('active');
+    }
+
+    function closeAddTextQuestionModal() {
+        document.getElementById('addTextQuestionModal').classList.remove('active');
+    }
+
+    function openEditQuestionModal(id, domanda, r1, r2, r3, r4, corretta) {
+        document.getElementById('edit_id_domanda').value = id;
+        document.getElementById('edit_domanda').value = domanda;
+        document.getElementById('edit_risposta1').value = r1;
+        document.getElementById('edit_risposta2').value = r2;
+        document.getElementById('edit_risposta3').value = r3;
+        document.getElementById('edit_risposta4').value = r4;
+        
+        // Reset deletion checkboxes
+        document.querySelector('input[name="delete_photo"]').checked = false;
+        document.querySelector('input[name="delete_audio"]').checked = false;
+        
+        const radios = document.getElementsByName('rispostaCorretta');
+        for (const radio of radios) {
+            if (radio.closest('#editQuestionForm') && radio.value == corretta) {
+                radio.checked = true;
+            }
+        }
+        
+        document.getElementById('editQuestionModal').classList.add('active');
+    }
+
+    function closeEditQuestionModal() {
+        document.getElementById('editQuestionModal').classList.remove('active');
+    }
+
+    function openEditTextQuestionModal(id, testo) {
+        document.getElementById('edit_text_id_domanda').value = id;
+        document.getElementById('edit_testo').value = testo;
+        document.getElementById('editTextQuestionModal').classList.add('active');
+    }
+
+    function closeEditTextQuestionModal() {
+        document.getElementById('editTextQuestionModal').classList.remove('active');
+    }
+
+    document.getElementById('addQuestionForm').onsubmit = async function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        appendCsrfToFormData(formData);
+        
+        try {
+            const response = await fetch('/octquiz/admin/add-question', {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (response.ok) {
+                location.reload();
+            } else {
+                alert('Errore durante l\'aggiunta della domanda. Verifica i dati inseriti.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Errore di connessione.');
+        }
+    };
+
+    document.getElementById('editQuestionForm').onsubmit = async function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        appendCsrfToFormData(formData);
+        
+        try {
+            const response = await fetch('/octquiz/admin/edit-question', {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (response.ok) {
+                location.reload();
+            } else {
+                alert('Errore durante la modifica della domanda. Verifica i dati inseriti.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Errore di connessione.');
+        }
+    };
+
+    document.getElementById('addTextQuestionForm').onsubmit = async function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        appendCsrfToFormData(formData);
+        
+        try {
+            const response = await fetch('/octquiz/admin/add-text-question', {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (response.ok) {
+                location.reload();
+            } else {
+                alert('Errore durante l\'aggiunta del testo. Verifica i dati inseriti.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Errore di connessione.');
+        }
+    };
+
+    document.getElementById('editTextQuestionForm').onsubmit = async function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        appendCsrfToFormData(formData);
+        
+        try {
+            const response = await fetch('/octquiz/admin/edit-text-question', {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (response.ok) {
+                location.reload();
+            } else {
+                alert('Errore durante la modifica del testo. Verifica i dati inseriti.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Errore di connessione.');
+        }
+    };
+
+    async function removeQuestion(idDomanda) {
+        if (!confirm('Sei sicuro di voler eliminare questa domanda?')) return;
+        
+        const idCategoria = [[${category.id}]];
+        const formData = new FormData();
+        formData.append('id_domanda', idDomanda);
+        formData.append('id_categoria', idCategoria);
+        appendCsrfToFormData(formData);
+        
+        try {
+            const response = await fetch('/octquiz/admin/remove-question', {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (response.ok) {
+                location.reload();
+            } else {
+                alert('Errore durante la rimozione della domanda.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Errore di connessione.');
+        }
+    }
+
+    window.onclick = function(event) {
+        const modal1 = document.getElementById('addQuestionModal');
+        const modal2 = document.getElementById('addTextQuestionModal');
+        const modal3 = document.getElementById('editQuestionModal');
+        const modal4 = document.getElementById('editTextQuestionModal');
+        if (event.target == modal1) closeAddQuestionModal();
+        if (event.target == modal2) closeAddTextQuestionModal();
+        if (event.target == modal3) closeEditQuestionModal();
+        if (event.target == modal4) closeEditTextQuestionModal();
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCT - Admin Home</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="icon" type="image/png" th:href="@{/photo/logo.png}">
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: logged(user=${user})}"></div>
+
+<section class="hero" style="min-height: auto; padding-top: 40px; padding-bottom: 40px; margin-top: 80px;">
+    <div class="hero-content" style="padding-bottom: 0;">
+        <h1 class="hero-title" style="font-size: clamp(2rem, 4vw, 3rem); margin-bottom: var(--space-16);">
+            Pannello <span class="highlight">Admin</span>
+        </h1>
+        <p class="hero-subtitle" style="margin-bottom: 0;">
+            Benvenuto, <span th:text="${user.nome}">Admin</span>. Gestisci la piattaforma da qui.
+        </p>
+    </div>
+</section>
+
+<section class="section" style="padding-top: 40px;">
+    <div class="section-container">
+        <div class="features-grid">
+            <!-- Gestione Utenti -->
+            <div class="feature-card">
+                <div class="feature-icon" style="margin-bottom: var(--space-16); color: var(--color-primary);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                        <path fill-rule="evenodd" d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z"/>
+                        <path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
+                    </svg>
+                </div>
+                <h3 class="feature-title">Gestione Utenti</h3>
+                <p class="feature-description">
+                    Visualizza, modifica o elimina gli utenti registrati alla piattaforma.
+                </p>
+                <p>
+                    In totale sono registrati <strong th:text="${numberofusers}">0</strong> utenti alla piattaforma.
+                </p>
+                <div style="margin-top: var(--space-24);">
+                    <a th:href="@{/admin/users}" class="btn btn-primary" style="width: 100%; text-align: center;">Accedi</a>
+                </div>
+            </div>
+
+            <!-- Gestione Domande -->
+            <div class="feature-card">
+                <div class="feature-icon" style="margin-bottom: var(--space-16); color: var(--color-primary);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                        <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.962 1.221-.64.319-.854.717-.84 1.258h1.121c.007-.353.131-.518.594-.766.586-.312 1.14-.707 1.14-1.637 0-1.282-1.121-2-2.394-2-1.373 0-2.348.78-2.437 2.126zM7.1 11.536a1.1 1.1 0 1 0 2.2 0 1.1 1.1 0 0 0-2.2 0z"/>
+                    </svg>
+                </div>
+                <h3 class="feature-title">Gestione Domande</h3>
+                <p class="feature-description">
+                    Aggiungi, modifica o rimuovi le domande dei quiz e le categorie.
+                </p>
+                <div style="margin-top: var(--space-24);">
+                    <a th:href="@{/admin/categories}" class="btn btn-primary" style="width: 100%; text-align: center;">Accedi</a>
+                </div>
+            </div>
+
+            <!-- Gestione Supporto -->
+            <div class="feature-card">
+                <div class="feature-icon" style="margin-bottom: var(--space-16); color: var(--color-primary);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2zm13 2.383-4.758 2.855L15 11.114v-5.73zm-.034 6.878L9.271 8.82 8 9.583 6.728 8.82l-5.694 3.44A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.739zM1 11.114l4.758-2.876L1 5.383v5.73z"/>
+                    </svg>
+                </div>
+                <h3 class="feature-title">Messaggi Supporto</h3>
+                <p class="feature-description">
+                    Leggi e gestisci i messaggi inviati dagli utenti tramite il modulo di supporto.
+                </p>
+                <p>
+                    Ci sono <strong th:text="${numberofmessages}">0</strong> messaggi da leggere.
+                </p>
+                <div style="margin-top: var(--space-24);">
+                    <a th:href="@{/admin/support}" class="btn btn-primary" style="width: 100%; text-align: center;">Visualizza</a>
+                </div>
+            </div>
+
+            <!-- Gestione Statistiche -->
+            <div class="feature-card">
+                <div class="feature-icon" style="margin-bottom: var(--space-16); color: var(--color-primary);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-bar-chart" viewBox="0 0 16 16">
+                        <path d="M4 11H2v3h2v-3zm5-4H7v7h2V7zm5-5v12h-2V2h2zm-2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1h-2zM6 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm-5 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3z"/>
+                    </svg>
+                </div>
+                <h3 class="feature-title">Gestione Statistiche</h3>
+                <p class="feature-description">
+                    Visualizza le statistiche di performance per ogni categoria di quiz.
+                </p>
+                <div style="margin-top: var(--space-24);">
+                    <a th:href="@{/admin/stats}" class="btn btn-primary" style="width: 100%; text-align: center;">Visualizza</a>
+                </div>
+            </div>
+
+            <!-- Utenti Online -->
+            <div class="feature-card">
+                <div class="feature-icon" style="margin-bottom: var(--space-16); color: var(--color-primary);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664z"/>
+                    </svg>
+                </div>
+                <h3 class="feature-title">Utenti Online</h3>
+                <p class="feature-description">
+                    Visualizza gli utenti attualmente attivi sulla piattaforma.
+                </p>
+                <p>
+                    Ci sono <strong th:text="${numberofactiveusers}">0</strong> utenti online.
+                </p>
+                <div style="margin-top: var(--space-24);">
+                    <button class="btn btn-primary" onclick="openOnlineUsersModal()" style="width: 100%; text-align: center;">Visualizza Elenco</button>
+                </div>
+            </div>
+
+            <!-- Logout -->
+            <div class="feature-card">
+                <div class="feature-icon" style="margin-bottom: var(--space-16); color: var(--color-error);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0v2z"/>
+                        <path fill-rule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z"/>
+                    </svg>
+                </div>
+                <h3 class="feature-title">Logout</h3>
+                <p class="feature-description">
+                    Esci in modo sicuro dal tuo account amministratore.
+                </p>
+                <div style="margin-top: var(--space-24);">
+                    <form th:action="@{/logout}" method="post" style="margin:0; width:100%;">
+                        <button type="submit" class="btn btn-secondary" style="width: 100%; text-align: center;">Esci</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<div th:replace="~{fragments/footer}"></div>
+
+<!-- Modal Utenti Online -->
+<div id="onlineUsersModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Utenti Online</h3>
+            <button class="modal-close" onclick="closeOnlineUsersModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p th:if="${#lists.isEmpty(usersonline)}">Nessun utente online al momento.</p>
+            <ul th:if="${not #lists.isEmpty(usersonline)}" style="list-style-type: none; padding: 0;">
+                <li th:each="u : ${usersonline}" style="padding: 12px 0; border-bottom: 1px solid var(--color-border); display: flex; align-items: center;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 12px; color: var(--color-primary);">
+                        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664z"/>
+                    </svg>
+                    <span th:text="${u}" style="font-weight: 500;">Nome Utente</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Effetto ombra header allo scroll
+    window.addEventListener('scroll', () => {
+        const header = document.querySelector('.header');
+        if (header) {
+            if (window.scrollY > 10) {
+                header.style.boxShadow = 'var(--shadow-md)';
+            } else {
+                header.style.boxShadow = 'none';
+            }
+        }
+    });
+
+    // Funzioni Modal Utenti Online
+    function openOnlineUsersModal() {
+        document.getElementById('onlineUsersModal').classList.add('active');
+    }
+
+    function closeOnlineUsersModal() {
+        document.getElementById('onlineUsersModal').classList.remove('active');
+    }
+
+    // Close modal when clicking outside
+    window.addEventListener('click', function(event) {
+        const modal = document.getElementById('onlineUsersModal');
+        if (event.target === modal) {
+            closeOnlineUsersModal();
+        }
+    });
+</script>
+
+</body>
+</html>

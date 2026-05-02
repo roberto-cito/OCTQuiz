@@ -1,0 +1,36 @@
+services:
+  app:
+    build: .
+    container_name: octquiz-app
+    ports:
+      - "8080:80" # Map host port 8080 to container port 80
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/${MYSQL_DATABASE:-octquiz}?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+      - SPRING_DATASOURCE_USERNAME=${MYSQL_USER:-root}
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_PASSWORD:-root}
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    depends_on:
+      - db
+    networks:
+      - octquiz-network
+    restart: always
+
+  db:
+    image: mysql:8.0
+    container_name: octquiz-db
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE:-octquiz}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD:-root}
+    ports:
+      - "3307:3306" # Optional: Access DB from host via port 3307
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - octquiz-network
+    restart: always
+
+volumes:
+  mysql_data:
+
+networks:
+  octquiz-network:

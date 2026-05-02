@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCT - Statistiche Categorie</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/admin-categories.css}">
+    <link rel="icon" type="image/png" th:href="@{/photo/logo.png}">
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: logged(user=${user})}"></div>
+
+<main class="admin-container">
+    <div class="admin-header">
+        <h1 class="section-title" style="margin-bottom: 0;">Statistiche Categorie</h1>
+    </div>
+
+    <div class="table-container">
+        <table class="category-table">
+            <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Azioni</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="c : ${categories}">
+                <td th:text="${c.nome}">Nome</td>
+                <td class="action-buttons">
+                    <!-- Visualizza Statistiche -->
+                    <form th:action="@{/admin/stats}" method="post">
+                        <input type="hidden" name="id" th:value="${c.id}">
+                        <button type="submit" class="btn-icon btn-view" title="Visualizza Statistiche">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bar-chart" viewBox="0 0 16 16">
+                                <path d="M4 11H2v3h2v-3zm5-4H7v7h2V7zm5-5v12h-2V2h2zm-2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1h-2zM6 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm-5 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3z"/>
+                            </svg>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer}"></div>
+
+<script>
+    window.addEventListener('scroll', () => {
+        const header = document.querySelector('.header');
+        if (header) {
+            if (window.scrollY > 10) {
+                header.style.boxShadow = 'var(--shadow-md)';
+            } else {
+                header.style.boxShadow = 'none';
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCT - Istruzioni Quiz</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/prequiz.css}">
+    <link rel="icon" type="image/png" th:href="@{/photo/logo.png}">
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: logged(user=${user})}"></div>
+
+<main class="prequiz-container">
+    <div class="instruction-card">
+        <h1 class="instruction-title">Istruzioni del Quiz</h1>
+
+        <div class="instruction-item">
+            <div class="instruction-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <div class="instruction-text">
+                Il quiz sulla categoria <strong th:text="${categoria.nome}">Categoria</strong> avrà una durata di
+                <span class="time-highlight" th:text="${categoria.hour > 0 ? categoria.hour + ' ore e ' : ''} + ${categoria.remainMinute} + ' minuti'">X minuti</span>.
+            </div>
+        </div>
+
+        <div class="instruction-item">
+            <div class="instruction-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <div class="instruction-text">
+                Su ogni domanda è indicato il <strong>tempo che avreste avuto</strong> durante le semifinali effettive. Non preoccuparti: qui hai tutto il tempo necessario per ragionare su ogni quesito.
+            </div>
+        </div>
+
+        <div class="instruction-item">
+            <div class="instruction-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                </svg>
+            </div>
+            <div class="instruction-text">
+                Una volta scaduto il timer, il quiz verrà <strong>consegnato automaticamente</strong> con le risposte fornite fino a quel momento.
+            </div>
+        </div>
+
+        <div class="action-area">
+            <form th:action="@{/quiz}" method="POST">
+                <input type="hidden" name="id" th:value="${categoria.id}">
+                <button type="submit" class="btn btn-primary" style="padding: var(--space-12) var(--space-32); font-size: var(--font-size-xl);">
+                    Vai al quiz
+                </button>
+            </form>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer}"></div>
+
+</body>
+</html>

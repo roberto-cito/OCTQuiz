@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCT - Domande Frequenti (FAQ)</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/faq.css}">
+    <link rel="icon" type="image/png" th:href="@{/photo/logo.png}">
+</head>
+<body>
+
+<header th:replace="${isLogged}
+    ? ~{fragments/header :: logged(user=${user})}
+    : ~{fragments/header :: public}">
+</header>
+
+<!-- Main Content -->
+<div style="margin-top: 100px;"> <!-- Spacing for fixed header -->
+    <section class="faq-section">
+        <h1 class="faq-title">Domande Frequenti</h1>
+        <p class="faq-subtitle">Trova le risposte alle domande più comuni su OCT Quiz.</p>
+
+        <div class="faq-container">
+            <!-- FAQ 1 -->
+            <div class="faq-item">
+                <div class="faq-question">
+                    Cos'è OCT Quiz?
+                    <span class="faq-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </span>
+                </div>
+                <div class="faq-answer">
+                    <p>OCT Quiz è la piattaforma ufficiale di allenamento per le Olimpiadi della Cultura e del Talento. Qui puoi trovare migliaia di quesiti divisi per categorie per prepararti al meglio alla competizione.</p>
+                </div>
+            </div>
+
+            <!-- FAQ 2 -->
+            <div class="faq-item">
+                <div class="faq-question">
+                    Come posso registrarmi?
+                    <span class="faq-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </span>
+                </div>
+                <div class="faq-answer">
+                    <p>Puoi registrarti gratuitamente cliccando sul pulsante "Registrati" in alto a destra. Dovrai inserire nome, cognome, email e una password. Riceverai un codice OTP via email per verificare il tuo account.</p>
+                </div>
+            </div>
+
+            <!-- FAQ 3 -->
+            <div class="faq-item">
+                <div class="faq-question">
+                    È gratuito?
+                    <span class="faq-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </span>
+                </div>
+                <div class="faq-answer">
+                    <p>Sì, l'accesso alla piattaforma di allenamento e a tutti i quiz è completamente gratuito per tutti gli studenti iscritti o interessati alle Olimpiadi.</p>
+                </div>
+            </div>
+
+            <!-- FAQ 4 -->
+            <div class="faq-item">
+                <div class="faq-question">
+                    Come funzionano i quiz?
+                    <span class="faq-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </span>
+                </div>
+                <div class="faq-answer">
+                    <p>I quiz sono suddivisi per categorie tematiche. Ogni sessione ti proporrà una serie di domande a risposta multipla. Al termine, potrai vedere il tuo punteggio e le risposte corrette.</p>
+                </div>
+            </div>
+
+            <!-- FAQ 5 -->
+            <div class="faq-item">
+                <div class="faq-question">
+                    Posso ripetere i quiz?
+                    <span class="faq-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </span>
+                </div>
+                <div class="faq-answer">
+                    <p>Assolutamente sì. Puoi ripetere i quiz quante volte vuoi per migliorare il tuo punteggio e la tua preparazione. Le categorie completate saranno segnate come "Completato", ma rimarranno accessibili.</p>
+                </div>
+            </div>
+
+            <!-- FAQ 6 -->
+            <div class="faq-item">
+                <div class="faq-question">
+                    Cosa faccio se dimentico la password?
+                    <span class="faq-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </span>
+                </div>
+                <div class="faq-answer">
+                    <p>Se non ricordi la password, clicca su "Accedi" e poi sul link "Password dimenticata?". Ti invieremo un'email con le istruzioni per impostarne una nuova.</p>
+                </div>
+            </div>
+            
+             <!-- FAQ 7 -->
+            <div class="faq-item">
+                <div class="faq-question">
+                   Come posso contattare l'assistenza?
+                    <span class="faq-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </span>
+                </div>
+                <div class="faq-answer">
+                    <p>Se hai bisogno di ulteriore aiuto, puoi contattare il nostro supporto tecnico tramite l'apposita sezione "Supporto" disponibile dopo aver effettuato l'accesso, oppure scrivendo una mail all'indirizzo ufficiale delle Olimpiadi.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</div>
+
+<div th:replace="~{fragments/footer}"></div>
+
+
+<!-- Modals (Only needed if user is not logged in, but safe to include always hidden) -->
+<!-- Copied from index.html structure for consistency with Public Header buttons -->
+
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Accedi</h2>
+                <button class="modal-close" onclick="closeModal('login')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Benvenuto! Accedi al tuo account per continuare il tuo allenamento.</p>
+                <form method="POST" th:action="@{/login}">
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email</label>
+                        <input type="email" id="email" name="username" class="form-input" placeholder="tua@email.it">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="password">Password</label>
+                        <input type="password" id="password" name="password" class="form-input" placeholder="••••••••">
+                    </div>
+                    <div class="form-group" style="text-align: right;">
+                        <a href="#" onclick="openModal('forgotPassword')" class="form-link">Password dimenticata?</a>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-large" style="width: 100%;">
+                        Accedi
+                    </button>
+                    <div class="form-group" style="text-align: center; margin-top: var(--space-16);">
+                        <a href="#" onclick="openModal('register')" class="form-link">Non hai un account? Registrati</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Registrati</h2>
+                <button class="modal-close" onclick="closeModal('register')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Crea il tuo account gratuito e inizia subito il tuo percorso verso le Olimpiadi!</p>
+                <form method="post" th:action="@{/register}" th:object="${registerForm}">
+                    <div class="form-group">
+                        <label class="form-label" for="registerName">Nome</label>
+                        <input type="text" id="registerName" th:field="*{registerName}" class="form-input" placeholder="Mario">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="registerSurname">Cognome</label>
+                        <input type="text" id="registerSurname" th:field="*{registerSurname}" class="form-input" placeholder="Rossi">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="registerEmail">Email</label>
+                        <input type="email" id="registerEmail" th:field="*{registerEmail}" class="form-input" placeholder="tua@email.it">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="registerPassword">Password</label>
+                        <input type="password" id="registerPassword" th:field="*{registerPassword}" class="form-input" placeholder="••••••••">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="registerPasswordConfirm">Conferma Password</label>
+                        <input type="password" id="registerPasswordConfirm" th:field="*{registerPasswordConfirm}" class="form-input" placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-large" style="width: 100%;">
+                        Crea Account
+                    </button>
+                    <div class="form-group" style="text-align: center; margin-top: var(--space-16);">
+                        <a href="#" onclick="openModal('login')" class="form-link">Hai già un account? Accedi</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="forgotPasswordModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Password Dimenticata</h2>
+                <button class="modal-close" onclick="closeModal('forgotPassword')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Inserisci il tuo indirizzo email per ricevere le istruzioni per reimpostare la password.</p>
+                <form method="post" th:action="@{/forgot-password}">
+                    <div class="form-group">
+                        <label class="form-label" for="forgotPasswordEmail">Email</label>
+                        <input type="email" id="forgotPasswordEmail" name="email" class="form-input" placeholder="tua@email.it">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-large" style="width: 100%;">
+                        Invia Istruzioni
+                    </button>
+                    <div class="form-group" style="text-align: center; margin-top: var(--space-16);">
+                        <a href="#" onclick="openModal('login')" class="form-link">Torna al Login</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+<script>
+    // FAQ Accordion Logic
+    document.querySelectorAll('.faq-question').forEach(question => {
+        question.addEventListener('click', () => {
+            const item = question.parentElement;
+            const isActive = item.classList.contains('active');
+
+            // Close all other items
+            document.querySelectorAll('.faq-item').forEach(otherItem => {
+                otherItem.classList.remove('active');
+            });
+
+            // Toggle current item
+            if (!isActive) {
+                item.classList.add('active');
+            }
+        });
+    });
+
+    // Modal Logic (Reused from index.html)
+    function openModal(type) {
+        const modal = document.getElementById(type + 'Modal');
+        if (!modal) return;
+
+        // Close any other open modals
+        document.querySelectorAll('.modal.active').forEach(activeModal => {
+            if (activeModal.id !== modal.id) {
+                closeModal(activeModal.id.replace('Modal', ''));
+            }
+        });
+
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(type) {
+        const modal = document.getElementById(type + 'Modal');
+        if (modal) {
+            modal.classList.remove('active');
+            if (!document.querySelector('.modal.active')) {
+                document.body.style.overflow = '';
+            }
+        }
+    }
+
+    // Close modal when clicking outside
+    document.querySelectorAll('.modal').forEach(modal => {
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModal(modal.id.replace('Modal', ''));
+            }
+        });
+    });
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            const activeModal = document.querySelector('.modal.active');
+            if (activeModal) {
+                closeModal(activeModal.id.replace('Modal', ''));
+            }
+        }
+    });
+
+    // Header scroll effect
+    window.addEventListener('scroll', () => {
+        const header = document.querySelector('.header');
+        if(header) {
+            if (window.scrollY > 10) {
+                header.style.boxShadow = 'var(--shadow-md)';
+            } else {
+                header.style.boxShadow = 'none';
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <footer th:fragment="footer">
+        <div class="footer-container">
+            <section class="sponsors-footer">
+                <div class="sponsor-item">
+                    <a href="https://www.raiscuola.rai.it/" target="_blank" rel="noopener noreferrer">
+                        <img th:src="@{/sponsor/raiscuola.png}" alt="Rai Scuola" class="sponsor-footer-logo" />
+                    </a>
+                    <span class="sponsor-footer-subtitle">MEDIA PARTNER</span>
+                </div>
+            </section>
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h3>OCT</h3>
+                    <p style="color: var(--color-text-secondary); margin-top: var(--space-8);">
+                        Piattaforma di allenamento per le Olimpiadi della Cultura e del Talento
+                    </p>
+                </div>
+                <div class="footer-column">
+                    <h3>Risorse</h3>
+                    <ul class="footer-links">
+                        <li><a th:href="@{/contatti}">Contatti</a></li>
+                        <li><a th:href="@{/faq}">FAQ</a></li>
+                        <li><a th:href="@{/support}">Supporto</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Legale</h3>
+                    <ul class="footer-links">
+                        <li><a th:href="@{/privacy}">Privacy</a></li>
+                        <li><a th:href="@{/terms}">Termini</a></li>
+                        <li><a th:href="@{/cookie-policy}">Cookie</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>Made by <a href="https://github.com/RMChannel">Cito Roberto</a></p>
+                <p>&copy; 2026 OCT - Olimpiadi della Cultura e del Talento. Tutti i diritti riservati.</p>
+            </div>
+        </div>
+        <script>
+            function togglePassword(inputId, button) {
+                const input = document.getElementById(inputId);
+                const icon = button.querySelector('img');
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.src = icon.src.replace('eye.png', 'hidden.png');
+                } else {
+                    input.type = 'password';
+                    icon.src = icon.src.replace('hidden.png', 'eye.png');
+                }
+            }
+        </script>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCT - Gestione Categorie</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/admin-categories.css}">
+    <link rel="icon" type="image/png" th:href="@{/photo/logo.png}">
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: logged(user=${user})}"></div>
+
+<main class="admin-container">
+    <div class="admin-header">
+        <h1 class="section-title" style="margin-bottom: 0;">Gestione Categorie</h1>
+        <button class="btn btn-primary" onclick="openAddModal()">Aggiungi Categoria</button>
+    </div>
+
+    <!-- Messaggi di feedback -->
+    <div th:if="${message}" class="alert" th:classappend="${class}" th:text="${message}"></div>
+
+    <div class="table-container">
+        <table class="category-table">
+            <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Tempo (min)</th>
+                <th>Visibile</th>
+                <th>Azioni</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="c : ${categories}">
+                <td th:text="${c.nome}">Nome</td>
+                <td th:text="${c.getHour()+'h '+c.getRemainMinute()+'m'}">Tempo</td>
+                <td>
+                    <span class="badge-status" 
+                          th:classappend="${c.visibile ? 'badge-visible' : 'badge-hidden'}"
+                          th:text="${c.visibile ? 'Visibile' : 'Nascosta'}">STATO</span>
+                </td>
+                <td class="action-buttons">
+                    <!-- Visualizza Domande -->
+                    <a th:href="@{/admin/category(id=${c.id})}" class="btn-icon btn-view" title="Visualizza Domande">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M16 8s-3-5.5-8-5.5S0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
+                            <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+                        </svg>
+                    </a>
+
+                    <!-- Modifica -->
+                    <button class="btn-icon btn-edit" title="Modifica Categoria"
+                            th:onclick="openEditModal([[${c.id}]], [[${c.nome}]], [[${c.min}]], [[${c.visibile}]])">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.707-6.707z"/>
+                        </svg>
+                    </button>
+
+                    <!-- Elimina -->
+                    <form th:action="@{/admin/remove-category}" method="post" style="display:inline;"
+                          onsubmit="return confirm('Sei sicuro di voler eliminare questa categoria e tutte le sue domande?')">
+                        <input type="hidden" name="id" th:value="${c.id}">
+                        <button type="submit" class="btn-icon btn-delete" title="Elimina Categoria">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                            </svg>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<!-- Modale Aggiungi Categoria -->
+<div id="addModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title">Aggiungi Categoria</h2>
+            <button class="modal-close" onclick="closeAddModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form th:action="@{/admin/add-category}" method="post">
+                <div class="form-group">
+                    <label class="form-label" for="add-nome">Nome</label>
+                    <input type="text" id="add-nome" name="nome" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="add-tempo">Tempo (minuti)</label>
+                    <input type="number" id="add-tempo" name="tempo" class="form-input" required min="10">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Visibilità</label>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="add-visibile" name="visibile" value="true" checked>
+                        <label for="add-visibile">Rendi visibile agli utenti</label>
+                    </div>
+                </div>
+
+                <div style="margin-top: var(--space-24);">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Aggiungi</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modale Modifica Categoria -->
+<div id="editModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title">Modifica Categoria</h2>
+            <button class="modal-close" onclick="closeEditModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form th:action="@{/admin/update-category}" method="post">
+                <input type="hidden" id="edit-id" name="id">
+                
+                <div class="form-group">
+                    <label class="form-label" for="edit-nome">Nome</label>
+                    <input type="text" id="edit-nome" name="nome" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="edit-tempo">Tempo (minuti)</label>
+                    <input type="number" id="edit-tempo" name="tempo" class="form-input" required min="10">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Visibilità</label>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="edit-visibile" name="visibile" value="true">
+                        <label for="edit-visibile">Rendi visibile agli utenti</label>
+                    </div>
+                </div>
+
+                <div style="margin-top: var(--space-24);">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Salva Modifiche</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer}"></div>
+
+<script>
+    function openAddModal() {
+        document.getElementById('addModal').classList.add('active');
+    }
+
+    function closeAddModal() {
+        document.getElementById('addModal').classList.remove('active');
+    }
+
+    function openEditModal(id, nome, tempo, visibile) {
+        document.getElementById('edit-id').value = id;
+        document.getElementById('edit-nome').value = nome;
+        document.getElementById('edit-tempo').value = tempo;
+        document.getElementById('edit-visibile').checked = visibile;
+        
+        document.getElementById('editModal').classList.add('active');
+    }
+
+    function closeEditModal() {
+        document.getElementById('editModal').classList.remove('active');
+    }
+
+    // Chiudi modali cliccando fuori
+    window.onclick = function(event) {
+        const addModal = document.getElementById('addModal');
+        const editModal = document.getElementById('editModal');
+        if (event.target == addModal) closeAddModal();
+        if (event.target == editModal) closeEditModal();
+    }
+
+    // Effetto ombra header allo scroll
+    window.addEventListener('scroll', () => {
+        const header = document.querySelector('.header');
+        if (header) {
+            if (window.scrollY > 10) {
+                header.style.boxShadow = 'var(--shadow-md)';
+            } else {
+                header.style.boxShadow = 'none';
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

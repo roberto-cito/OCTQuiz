@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCT - Gestione Messaggi Supporto</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/admin-support.css}">
+    <link rel="icon" type="image/png" th:href="@{/photo/logo.png}">
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: logged(user=${user})}"></div>
+
+<main class="admin-container">
+    <div class="admin-header">
+        <h1 class="section-title" style="margin-bottom: 0;">Messaggi di Supporto</h1>
+        <form th:if="${not #lists.isEmpty(messaggi)}" th:action="@{/admin/remove-all-messages}" method="post" 
+              onsubmit="return confirm('Sei sicuro di voler eliminare TUTTI i messaggi?')">
+            <button type="submit" class="btn btn-danger">
+                Elimina Tutti
+            </button>
+        </form>
+    </div>
+
+    <div class="table-container">
+        <table class="support-table">
+            <thead>
+            <tr>
+                <th>Data e Ora</th>
+                <th>Email</th>
+                <th>Categoria</th>
+                <th>Azioni</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="m : ${messaggi}">
+                <td th:text="${#dates.format(m.data, 'dd/MM/yyyy HH:mm')}">Data</td>
+                <td th:text="${m.email}">Email</td>
+                <td th:text="${m.categoria}">Categoria</td>
+                <td class="action-buttons">
+                    <!-- Apri -->
+                    <button class="btn-icon btn-view" title="Visualizza Messaggio"
+                            th:onclick="openMessageModal([[${m.email}]], [[${m.categoria}]], [[${#dates.format(m.data, 'dd/MM/yyyy HH:mm')}]], [[${m.messaggio}]])">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+                            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+                        </svg>
+                    </button>
+
+                    <!-- Elimina -->
+                    <form th:action="@{/admin/remove-message}" method="post" style="display:inline;"
+                          onsubmit="return confirm('Sei sicuro di voler eliminare questo messaggio?')">
+                        <input type="hidden" name="id" th:value="${m.id}">
+                        <button type="submit" class="btn-icon btn-delete" title="Elimina Messaggio">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                            </svg>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(messaggi)}">
+                <td colspan="4" style="text-align: center; padding: var(--space-32);">Non ci sono messaggi di supporto.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<!-- Modale Visualizza Messaggio -->
+<div id="messageModal" class="modal">
+    <div class="modal-content" style="max-width: 600px;">
+        <div class="modal-header">
+            <h2 class="modal-title">Dettaglio Messaggio</h2>
+            <button class="modal-close" onclick="closeMessageModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div style="margin-bottom: var(--space-16);">
+                <strong>Da:</strong> <span id="msg-email"></span>
+            </div>
+            <div style="margin-bottom: var(--space-16);">
+                <strong>Categoria:</strong> <span id="msg-categoria"></span>
+            </div>
+            <div style="margin-bottom: var(--space-16);">
+                <strong>Inviato il:</strong> <span id="msg-data"></span>
+            </div>
+            <div style="margin-top: var(--space-24);">
+                <strong>Messaggio:</strong>
+                <div id="msg-testo" style="margin-top: var(--space-8); padding: var(--space-16); background: var(--color-gray-100); border-radius: var(--radius-base); white-space: pre-wrap; word-break: break-word;"></div>
+            </div>
+        </div>
+        <div class="modal-footer" style="margin-top: var(--space-24); text-align: right;">
+            <button class="btn btn-secondary" onclick="closeMessageModal()">Chiudi</button>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer}"></div>
+
+<script>
+    function openMessageModal(email, categoria, data, messaggio) {
+        document.getElementById('msg-email').innerText = email;
+        document.getElementById('msg-categoria').innerText = categoria;
+        document.getElementById('msg-data').innerText = data;
+        document.getElementById('msg-testo').innerText = messaggio;
+        
+        document.getElementById('messageModal').classList.add('active');
+    }
+
+    function closeMessageModal() {
+        document.getElementById('messageModal').classList.remove('active');
+    }
+
+    // Chiudi modale cliccando fuori
+    window.onclick = function(event) {
+        const modal = document.getElementById('messageModal');
+        if (event.target == modal) {
+            closeMessageModal();
+        }
+    }
+
+    // Effetto ombra header allo scroll
+    window.addEventListener('scroll', () => {
+        const header = document.querySelector('.header');
+        if (header) {
+            if (window.scrollY > 10) {
+                header.style.boxShadow = 'var(--shadow-md)';
+            } else {
+                header.style.boxShadow = 'none';
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

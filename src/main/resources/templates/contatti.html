@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCT - Contatti</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/contatti.css}">
+    <link rel="icon" type="image/png" th:href="@{/photo/logo.png}">
+</head>
+<body>
+
+<header th:replace="${isLogged}
+    ? ~{fragments/header :: logged(user=${user})}
+    : ~{fragments/header :: public}">
+</header>
+
+<!-- Main Content -->
+<div style="margin-top: 100px;"> <!-- Spacing for fixed header -->
+    <section class="contact-section">
+        <h1 class="contact-title">Contatti</h1>
+        <p class="contact-subtitle">Hai bisogno di informazioni? Ecco come raggiungere i referenti delle Olimpiadi della Cultura e del Talento.</p>
+
+        <div class="contact-grid">
+            
+            <!-- Sede Legale -->
+            <div class="contact-card">
+                <div class="contact-role">Sede Legale</div>
+                <div class="contact-name">Associazione Culturale OCT</div>
+                <div class="contact-info">
+                    <p>Via Francesco Navone 12/b</p>
+                    <p>00053 Civitavecchia (RM)</p>
+                </div>
+            </div>
+
+            <!-- Segreteria Generale -->
+            <div class="contact-card">
+                <div class="contact-role">Segreteria Generale</div>
+                <div class="contact-name">Informazioni Generali</div>
+                <div class="contact-info">
+                    <p><a href="mailto:segreteria@olimpiadidellacultura.it">segreteria@olimpiadidellacultura.it</a></p>
+                </div>
+            </div>
+
+            <!-- Accoglienza -->
+            <div class="contact-card">
+                <div class="contact-role">Accoglienza</div>
+                <div class="contact-name">Supporto Eventi</div>
+                <div class="contact-info">
+                    <p><a href="mailto:accoglienza@olimpiadidellacultura.it">accoglienza@olimpiadidellacultura.it</a></p>
+                </div>
+            </div>
+
+            <!-- Divider: Direttivo -->
+            <div class="section-divider">Direttivo Nazionale</div>
+
+            <!-- Presidente Nazionale -->
+            <div class="contact-card">
+                <div class="contact-role">Presidente Nazionale</div>
+                <div class="contact-name">Simone Aubry</div>
+                <div class="contact-info">
+                    <p>Tel: <a href="tel:+393492460913">+39 349 2460913</a></p>
+                </div>
+            </div>
+
+            <!-- Responsabile Finali -->
+            <div class="contact-card">
+                <div class="contact-role">Responsabile Finali</div>
+                <div class="contact-name">Elettra Antonucci</div>
+                <div class="contact-info">
+                    <p>Tel: <a href="tel:+393711328066">+39 371 1328066</a></p>
+                </div>
+            </div>
+
+            <!-- Responsabile Informatico -->
+            <div class="contact-card">
+                <div class="contact-role">Responsabile Informatico</div>
+                <div class="contact-name">Roberto Cito</div>
+            </div>
+
+            <!-- Responsabile Quiz -->
+            <div class="contact-card">
+                <div class="contact-role">Responsabile Quiz</div>
+                <div class="contact-name">Veronica Fersini</div>
+            </div>
+
+            <!-- Responsabile Giochi di Galileo -->
+            <div class="contact-card">
+                <div class="contact-role">Responsabile Giochi di Galileo</div>
+                <div class="contact-name">Kristian Doci</div>
+            </div>
+
+            <!-- Responsabile Semifinali Nord -->
+            <div class="contact-card">
+                <div class="contact-role">Responsabile Semifinali Nord</div>
+                <div class="contact-name">Carlotta De Marco</div>
+            </div>
+
+            <!-- Responsabile Semifinali Centro -->
+            <div class="contact-card">
+                <div class="contact-role">Responsabile Semifinali Centro</div>
+                <div class="contact-name">Rino Acampora</div>
+            </div>
+
+            <!-- Responsabile Semifinali Sud -->
+            <div class="contact-card">
+                <div class="contact-role">Responsabile Semifinali Sud</div>
+                <div class="contact-name">Flavia Alessandrelli</div>
+            </div>
+            <!-- Responsabile Comunicazione -->
+            <div class="contact-card">
+                <div class="contact-role">Responsabile Comunicazione</div>
+                <div class="contact-name">Giovanni Calabrese</div>
+            </div>
+
+            <!-- Responsabile Logistico -->
+            <div class="contact-card">
+                <div class="contact-role">Responsabile Logistico</div>
+                <div class="contact-name">Silvia Brancorsini</div>
+            </div>
+
+            <!-- Responsabile Grafico -->
+            <div class="contact-card">
+                <div class="contact-role">Responsabile Grafico</div>
+                <div class="contact-name">Ilaria Iannicelli</div>
+            </div>
+
+            <!-- Responsabile Partnership e Bandi -->
+            <div class="contact-card">
+                <div class="contact-role">Responsabile Partnership e Bandi</div>
+                <div class="contact-name">Daniele Carpentieri</div>
+            </div>
+
+        </div>
+    </section>
+</div>
+
+<div th:replace="~{fragments/footer}"></div>
+
+
+<!-- Modals (Reused from faq.html/index.html) -->
+
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Accedi</h2>
+                <button class="modal-close" onclick="closeModal('login')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Benvenuto! Accedi al tuo account per continuare il tuo allenamento.</p>
+                <form method="POST" th:action="@{/login}">
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email</label>
+                        <input type="email" id="email" name="username" class="form-input" placeholder="tua@email.it">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="password">Password</label>
+                        <input type="password" id="password" name="password" class="form-input" placeholder="••••••••">
+                    </div>
+                    <div class="form-group" style="text-align: right;">
+                        <a href="#" onclick="openModal('forgotPassword')" class="form-link">Password dimenticata?</a>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-large" style="width: 100%;">
+                        Accedi
+                    </button>
+                    <div class="form-group" style="text-align: center; margin-top: var(--space-16);">
+                        <a href="#" onclick="openModal('register')" class="form-link">Non hai un account? Registrati</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Registrati</h2>
+                <button class="modal-close" onclick="closeModal('register')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Crea il tuo account gratuito e inizia subito il tuo percorso verso le Olimpiadi!</p>
+                <form method="post" th:action="@{/register}" th:object="${registerForm}">
+                    <div class="form-group">
+                        <label class="form-label" for="registerName">Nome</label>
+                        <input type="text" id="registerName" th:field="*{registerName}" class="form-input" placeholder="Mario">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="registerSurname">Cognome</label>
+                        <input type="text" id="registerSurname" th:field="*{registerSurname}" class="form-input" placeholder="Rossi">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="registerEmail">Email</label>
+                        <input type="email" id="registerEmail" th:field="*{registerEmail}" class="form-input" placeholder="tua@email.it">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="registerPassword">Password</label>
+                        <input type="password" id="registerPassword" th:field="*{registerPassword}" class="form-input" placeholder="••••••••">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="registerPasswordConfirm">Conferma Password</label>
+                        <input type="password" id="registerPasswordConfirm" th:field="*{registerPasswordConfirm}" class="form-input" placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-large" style="width: 100%;">
+                        Crea Account
+                    </button>
+                    <div class="form-group" style="text-align: center; margin-top: var(--space-16);">
+                        <a href="#" onclick="openModal('login')" class="form-link">Hai già un account? Accedi</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="forgotPasswordModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Password Dimenticata</h2>
+                <button class="modal-close" onclick="closeModal('forgotPassword')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Inserisci il tuo indirizzo email per ricevere le istruzioni per reimpostare la password.</p>
+                <form method="post" th:action="@{/forgot-password}">
+                    <div class="form-group">
+                        <label class="form-label" for="forgotPasswordEmail">Email</label>
+                        <input type="email" id="forgotPasswordEmail" name="email" class="form-input" placeholder="tua@email.it">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-large" style="width: 100%;">
+                        Invia Istruzioni
+                    </button>
+                    <div class="form-group" style="text-align: center; margin-top: var(--space-16);">
+                        <a href="#" onclick="openModal('login')" class="form-link">Torna al Login</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+<script>
+    // Modal Logic
+    function openModal(type) {
+        const modal = document.getElementById(type + 'Modal');
+        if (!modal) return;
+
+        // Close any other open modals
+        document.querySelectorAll('.modal.active').forEach(activeModal => {
+            if (activeModal.id !== modal.id) {
+                closeModal(activeModal.id.replace('Modal', ''));
+            }
+        });
+
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(type) {
+        const modal = document.getElementById(type + 'Modal');
+        if (modal) {
+            modal.classList.remove('active');
+            if (!document.querySelector('.modal.active')) {
+                document.body.style.overflow = '';
+            }
+        }
+    }
+
+    // Close modal when clicking outside
+    document.querySelectorAll('.modal').forEach(modal => {
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModal(modal.id.replace('Modal', ''));
+            }
+        });
+    });
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            const activeModal = document.querySelector('.modal.active');
+            if (activeModal) {
+                closeModal(activeModal.id.replace('Modal', ''));
+            }
+        }
+    });
+
+    // Header scroll effect
+    window.addEventListener('scroll', () => {
+        const header = document.querySelector('.header');
+        if(header) {
+            if (window.scrollY > 10) {
+                header.style.boxShadow = 'var(--shadow-md)';
+            } else {
+                header.style.boxShadow = 'none';
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

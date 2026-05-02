@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCT - Gestione Utenti</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/admin-users.css}">
+    <link rel="icon" type="image/png" th:href="@{/photo/logo.png}">
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: logged(user=${user})}"></div>
+
+<main class="admin-container">
+        <div class="admin-header">
+            <h1 class="section-title" style="margin-bottom: 0;">Gestione Utenti</h1>
+            <div class="search-container" style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px; align-items: center;">
+                <input type="text" id="searchInput" class="form-input" placeholder="Cerca..." style="width: 100%; max-width: 400px; padding: 10px;">
+                <div class="search-options" style="display: flex; gap: 15px; font-size: 0.9rem; color: var(--color-text-secondary);">
+                    <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                        <input type="checkbox" id="searchNome" checked> Nome
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                        <input type="checkbox" id="searchCognome" checked> Cognome
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                        <input type="checkbox" id="searchEmail" checked> Email
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                        <input type="checkbox" id="searchRuolo" checked> Ruolo
+                    </label>
+                </div>
+            </div>
+        </div>
+    
+        <!-- Messaggi di feedback -->
+        <div th:if="${message}" class="alert" th:classappend="${class}" th:text="${message}"></div>
+    
+        <div class="table-container">
+            <table class="user-table">
+                <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Cognome</th>
+                    <th>Email</th>
+                    <th>Ruolo</th>
+                    <th>Azioni</th>
+                </tr>
+                </thead>
+                <tbody id="userTableBody">
+                <tr th:each="u : ${users}">
+                    <td th:text="${u.nome}">Nome</td>
+                    <td th:text="${u.cognome}">Cognome</td>
+                    <td th:text="${u.email}">Email</td>
+                    <td>
+                        <span class="badge-role" 
+                              th:classappend="${u.ruolo == 'ADMIN' ? 'badge-admin' : 'badge-user'}"
+                              th:text="${u.ruolo}">RUOLO</span>
+                    </td>
+                    <td class="action-buttons">
+                        <!-- Vedi Categorie -->
+                        <button class="btn-icon btn-view" title="Vedi Categorie"
+                                onclick="openCategoriesModal(this)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                            </svg>
+                        </button>
+                        <div class="user-categories-data" style="display:none;">
+                            <span class="user-name" th:text="${u.nome} + ' ' + ${u.cognome}"></span>
+                            <ul class="categories-list" style="list-style-type: none; padding: 0;">
+                                <li th:each="cat : ${u.categorie}" 
+                                    style="background: rgba(16, 185, 129, 0.1); color: #059669; padding: 8px; margin-bottom: 4px; border-radius: 4px; border: 1px solid rgba(16, 185, 129, 0.2);">
+                                    <span th:text="${cat.nome}">Category Name</span>
+                                </li>
+                                <li th:if="${#sets.isEmpty(u.categorie)}" style="color: var(--color-text-secondary); font-style: italic;">
+                                    Nessuna categoria completata.
+                                </li>
+                            </ul>
+                        </div>
+    
+                        <!-- Modifica -->
+                        <button class="btn-icon btn-edit" title="Modifica Utente"
+                                th:onclick="openEditModal([[${u.nome}]], [[${u.cognome}]], [[${u.email}]], [[${u.ruolo}]])">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.707-6.707z"/>
+                            </svg>
+                        </button>
+    
+                        <!-- Reset Risultati -->
+                        <form th:action="@{/admin/reset-user-results}" method="post" style="display:inline;" 
+                              onsubmit="return confirm('Sei sicuro di voler resettare i progressi di questo utente?')">
+                            <input type="hidden" name="email" th:value="${u.email}">
+                            <button type="submit" class="btn-icon btn-reset" title="Reset Risultati">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+                                    <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+                                </svg>
+                            </button>
+                        </form>
+    
+                        <!-- Elimina -->
+                        <form th:action="@{/admin/remove-user}" method="post" style="display:inline;"
+                              onsubmit="return confirm('Sei sicuro di voler eliminare definitivamente questo utente?')">
+                            <input type="hidden" name="email" th:value="${u.email}">
+                            <button type="submit" class="btn-icon btn-delete" title="Elimina Utente">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                                </svg>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="pagination-container" style="text-align: center; margin-top: 20px;">
+            <button id="prevPage" class="btn">Precedente</button>
+            <span id="pageInfo" style="margin: 0 10px;"></span>
+            <button id="nextPage" class="btn">Successiva</button>
+        </div>
+    </main>
+    
+    <!-- Modale Modifica Utente -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Modifica Utente</h2>
+                <button class="modal-close" onclick="closeEditModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/admin/update-user}" method="post">
+                    <input type="hidden" id="edit-old-email" name="email">
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="edit-nome">Nome</label>
+                        <input type="text" id="edit-nome" name="nome" class="form-input" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="edit-cognome">Cognome</label>
+                        <input type="text" id="edit-cognome" name="cognome" class="form-input" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="edit-new-email">Nuova Email</label>
+                        <input type="email" id="edit-new-email" name="newMail" class="form-input" required>
+                    </div>
+    
+                    <div class="form-group">
+                        <label class="form-label">Ruolo</label>
+                        <div style="display: flex; gap: var(--space-16); align-items: center;">
+                            <label style="display: flex; align-items: center; gap: 4px;">
+                                <input type="radio" name="ruolo" value="false" id="role-user"> Utente
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 4px;">
+                                <input type="radio" name="ruolo" value="true" id="role-admin"> Amministratore
+                            </label>
+                        </div>
+                    </div>
+    
+                    <div style="margin-top: var(--space-24);">
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Salva Modifiche</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modale Categorie Completate -->
+    <div id="categoriesModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Categorie Completate</h2>
+                <button class="modal-close" onclick="closeCategoriesModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h3 id="categories-modal-username" style="margin-bottom: var(--space-16); font-weight: bold;"></h3>
+                <div id="categories-modal-list"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div th:replace="~{fragments/footer}"></div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.getElementById('searchInput');
+            const tableBody = document.getElementById('userTableBody');
+            const rows = Array.from(tableBody.getElementsByTagName('tr'));
+            const prevPageButton = document.getElementById('prevPage');
+            const nextPageButton = document.getElementById('nextPage');
+            const pageInfo = document.getElementById('pageInfo');
+            const rowsPerPage = 10;
+            let currentPage = 1;
+            let filteredRows = rows;
+    
+            function displayRows() {
+                tableBody.innerHTML = '';
+                const startIndex = (currentPage - 1) * rowsPerPage;
+                const endIndex = startIndex + rowsPerPage;
+                const paginatedRows = filteredRows.slice(startIndex, endIndex);
+                paginatedRows.forEach(row => tableBody.appendChild(row));
+            }
+    
+            function updatePagination() {
+                const totalPages = Math.ceil(filteredRows.length / rowsPerPage);
+                pageInfo.textContent = `Pagina ${currentPage} di ${totalPages > 0 ? totalPages : 1}`;
+                prevPageButton.disabled = currentPage === 1;
+                nextPageButton.disabled = currentPage === totalPages || totalPages === 0;
+            }
+    
+            function searchUsers() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const searchNome = document.getElementById('searchNome').checked;
+                const searchCognome = document.getElementById('searchCognome').checked;
+                const searchEmail = document.getElementById('searchEmail').checked;
+                const searchRuolo = document.getElementById('searchRuolo').checked;
+
+                filteredRows = rows.filter(row => {
+                    const nomeCell = row.getElementsByTagName('td')[0];
+                    const cognomeCell = row.getElementsByTagName('td')[1];
+                    const emailCell = row.getElementsByTagName('td')[2];
+                    const ruoloCell = row.getElementsByTagName('td')[3];
+                    
+                    let match = false;
+                    if (searchNome && nomeCell.textContent.toLowerCase().includes(searchTerm)) match = true;
+                    if (searchCognome && cognomeCell.textContent.toLowerCase().includes(searchTerm)) match = true;
+                    if (searchEmail && emailCell.textContent.toLowerCase().includes(searchTerm)) match = true;
+                    if (searchRuolo && ruoloCell.textContent.toLowerCase().includes(searchTerm)) match = true;
+                    
+                    return match;
+                });
+                currentPage = 1;
+                displayRows();
+                updatePagination();
+            }
+    
+            searchInput.addEventListener('keyup', searchUsers);
+            document.getElementById('searchNome').addEventListener('change', searchUsers);
+            document.getElementById('searchCognome').addEventListener('change', searchUsers);
+            document.getElementById('searchEmail').addEventListener('change', searchUsers);
+            document.getElementById('searchRuolo').addEventListener('change', searchUsers);
+    
+            prevPageButton.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    displayRows();
+                    updatePagination();
+                }
+            });
+    
+            nextPageButton.addEventListener('click', () => {
+                const totalPages = Math.ceil(filteredRows.length / rowsPerPage);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    displayRows();
+                    updatePagination();
+                }
+            });
+    
+            // Initial setup
+            displayRows();
+            updatePagination();
+        });
+    
+        function openEditModal(nome, cognome, email, ruolo) {
+            document.getElementById('edit-old-email').value = email;
+            document.getElementById('edit-new-email').value = email;
+            document.getElementById('edit-nome').value = nome;
+            document.getElementById('edit-cognome').value = cognome;
+            
+            if (ruolo === 'ADMIN') {
+                document.getElementById('role-admin').checked = true;
+            } else {
+                document.getElementById('role-user').checked = true;
+            }
+            
+            document.getElementById('editModal').classList.add('active');
+        }
+    
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('active');
+        }
+    
+        function openCategoriesModal(btn) {
+            const container = btn.nextElementSibling; // div.user-categories-data
+            const userName = container.querySelector('.user-name').innerText;
+            const listHtml = container.querySelector('.categories-list').outerHTML;
+            
+            document.getElementById('categories-modal-username').innerText = userName;
+            document.getElementById('categories-modal-list').innerHTML = listHtml;
+            document.getElementById('categoriesModal').classList.add('active');
+        }
+    
+        function closeCategoriesModal() {
+            document.getElementById('categoriesModal').classList.remove('active');
+        }
+    
+        // Chiudi modale cliccando fuori
+        window.onclick = function(event) {
+            const editModal = document.getElementById('editModal');
+            const categoriesModal = document.getElementById('categoriesModal');
+            if (event.target == editModal) {
+                closeEditModal();
+            }
+            if (event.target == categoriesModal) {
+                closeCategoriesModal();
+            }
+        }
+    
+        // Effetto ombra header allo scroll
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('.header');
+            if (header) {
+                if (window.scrollY > 10) {
+                    header.style.boxShadow = 'var(--shadow-md)';
+                } else {
+                    header.style.boxShadow = 'none';
+                }
+            }
+        });
+    </script>
+    
+    </body>
+    </html>

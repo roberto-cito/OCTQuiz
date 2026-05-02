@@ -1,0 +1,165 @@
+.result-container {
+    max-width: 800px;
+    margin: 7rem auto;
+    text-align: center;
+    background: var(--color-surface);
+    padding: 3rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    color: var(--color-text);
+}
+.score-circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 8px solid var(--color-primary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 2rem auto;
+}
+.score-value {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--color-primary);
+    line-height: 1;
+}
+.score-total {
+    font-size: 1.25rem;
+    color: var(--color-text-secondary);
+}
+.result-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+.result-message {
+    color: var(--color-text-secondary);
+    margin-bottom: 2rem;
+}
+
+.review-section {
+    margin-top: 3rem;
+    text-align: left;
+    border-top: 1px solid var(--color-border);
+    padding-top: 2rem;
+}
+
+.review-title {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: var(--color-text);
+}
+
+.review-card {
+    background: var(--color-background);
+    border-radius: var(--radius-base);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--color-border);
+}
+
+.review-question {
+    font-weight: 600;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    color: var(--color-text);
+}
+
+.review-image {
+    max-width: 100%;
+    max-height: 300px;
+    margin-bottom: 1rem;
+    border-radius: var(--radius-base);
+    display: block;
+}
+
+.review-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.review-option {
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-base);
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    font-size: 0.95rem;
+    color: var(--color-text);
+    position: relative;
+}
+
+.review-option.correct {
+    background-color: rgba(46, 204, 113, 0.15);
+    border-color: #2ecc71;
+    color: #27ae60;
+    font-weight: 600;
+}
+
+.review-option.wrong {
+    background-color: rgba(231, 76, 60, 0.15);
+    border-color: #e74c3c;
+    color: #c0392b;
+}
+
+.user-marker {
+    float: right;
+    font-size: 0.8em;
+    font-weight: bold;
+    color: var(--color-text-secondary);
+}
+
+.review-option.correct .user-marker {
+    color: #1b5e20;
+}
+
+.review-option.wrong .user-marker {
+    color: #b71c1c;
+}
+
+.buttons-container {
+    margin-top: 3rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.hidden-options {
+    display: none !important;
+}
+
+.not-answered-info {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background-color: rgba(0, 0, 0, 0.03);
+    border-radius: var(--radius-base);
+    border-left: 4px solid var(--color-gray-400);
+}
+
+.not-answered-text {
+    font-size: 0.95rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.75rem;
+}
+
+.btn-toggle-answer {
+    background: none;
+    border: 1px solid var(--color-primary);
+    color: var(--color-primary);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-base);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: var(--font-family-base);
+}
+
+.btn-toggle-answer:hover {
+    background-color: var(--color-primary);
+    color: white;
+}

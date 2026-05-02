@@ -1,0 +1,120 @@
+.policy-section {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 0 20px;
+    min-height: 60vh;
+}
+
+.policy-title {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text);
+}
+
+.policy-date {
+    text-align: center;
+    margin-bottom: 60px;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-base);
+}
+
+.policy-content {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    color: var(--color-text);
+    line-height: 1.7;
+}
+
+.policy-content h2 {
+    margin-top: 32px;
+    margin-bottom: 16px;
+    font-size: 1.5rem;
+    color: var(--color-primary);
+}
+
+.policy-content p {
+    margin-bottom: 16px;
+}
+
+.policy-content ul {
+    margin-bottom: 16px;
+    padding-left: 20px;
+}
+
+.policy-content li {
+    margin-bottom: 8px;
+}
+
+.policy-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 24px;
+}
+
+.policy-table th, .policy-table td {
+    border: 1px solid var(--color-border);
+    padding: 12px;
+    text-align: left;
+}
+
+.policy-table th {
+    background-color: rgba(var(--color-primary-rgb), 0.05);
+    color: var(--color-primary);
+}
+
+@media (max-width: 768px) {
+    .policy-content {
+        padding: 20px;
+    }
+
+    .policy-section {
+        margin: 20px auto;
+    }
+
+    /* Table optimization: Stacked view */
+    .policy-table, .policy-table thead, .policy-table tbody, .policy-table th, .policy-table td, .policy-table tr {
+        display: block;
+    }
+
+    .policy-table thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    .policy-table tr {
+        border: 1px solid var(--color-border);
+        margin-bottom: 10px;
+        border-radius: var(--radius-base);
+        background: rgba(var(--color-primary-rgb), 0.02);
+    }
+
+    .policy-table td {
+        border: none;
+        border-bottom: 1px solid var(--color-border);
+        position: relative;
+        padding-left: 40% !important;
+        font-size: 0.85rem;
+        min-height: 40px;
+    }
+
+    .policy-table td:last-child {
+        border-bottom: 0;
+    }
+
+    .policy-table td:before {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        width: 30%;
+        padding-right: 10px;
+        white-space: nowrap;
+        content: attr(data-label);
+        font-weight: var(--font-weight-bold);
+        color: var(--color-primary);
+    }
+}

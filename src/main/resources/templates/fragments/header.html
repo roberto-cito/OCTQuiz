@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!-- HEADER LOGGATO (per home.html) -->
+<header th:fragment="logged(user)" class="header">
+    <div class="header-container">
+        <a th:href="@{/home}" class="logo">OCT</a>
+
+        <div class="user-profile">
+            <!-- Vista Desktop -->
+            <div class="user-details">
+                <span class="user-name" th:text="${user.nome + ' ' + user.cognome}">Utente</span>
+                <div class="user-links" style="display:flex; align-items:center; gap:5px;">
+                    <a th:href="@{/account}">Account</a> &bull;
+                    <form th:action="@{/logout}" method="post" style="margin:0; padding:0; display:flex;">
+                        <button type="submit" style="background:none; border:none; padding:0; color:inherit; cursor:pointer; font:inherit; text-decoration:underline;">Logout</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Vista Mobile -->
+            <a th:href="@{/account}" class="btn btn-secondary mobile-only-btn" style="padding: 6px 12px; font-size: 0.8rem;">
+                Account
+            </a>
+            <form th:action="@{/logout}" method="post" style="margin:0; display:inline;">
+                <button type="submit" class="btn btn-secondary mobile-only-btn" style="padding: 6px 12px; font-size: 0.8rem;">
+                    Logout
+                </button>
+            </form>
+        </div>
+    </div>
+</header>
+
+<!-- HEADER PUBBLICO (per index.html) -->
+<header th:fragment="public" class="header">
+    <div class="header-container">
+        <a th:href="@{/}" class="logo">OCT</a>
+        <div class="header-buttons">
+            <button class="btn btn-secondary" onclick="openModal('login')">Accedi</button>
+            <button class="btn btn-primary" onclick="openModal('register')">Registrati</button>
+        </div>
+    </div>
+</header>
+
+<!-- HEADER CON BOTTONE INDIETRO (per forgot-password.html) -->
+<header th:fragment="withBackBtn" class="header">
+    <div class="header-container">
+        <a th:href="@{/}" class="logo">OCT</a>
+        <div class="header-buttons">
+            <a th:href="@{/}" class="btn btn-secondary">Torna alla Home</a>
+        </div>
+    </div>
+</header>
+
+<!-- HEADER MINIMALE (per confirm-newPassword.html o pagine di servizio) -->
+<header th:fragment="minimal" class="header">
+    <div class="header-container">
+        <a th:href="@{/}" class="logo">OCT</a>
+    </div>
+</header>
+
+</body>
+</html>

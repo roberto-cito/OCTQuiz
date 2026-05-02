@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCT - Home</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="icon" type="image/png" th:href="@{/photo/logo.png}">
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: logged(user=${user})}"></div>
+
+<section class="hero" style="min-height: auto; padding-top: 40px; padding-bottom: 40px; margin-top: 80px;">
+    <div class="hero-content" style="padding-bottom: 0;">
+        <h1 class="hero-title" style="font-size: clamp(2rem, 4vw, 3rem); margin-bottom: var(--space-16);">
+            Ciao, <span class="highlight" th:text="${user.nome}">Student</span>!
+        </h1>
+        <p class="hero-subtitle" style="margin-bottom: 0;">
+            Ecco i quiz disponibili per il tuo allenamento.
+        </p>
+    </div>
+</section>
+
+<section class="section" style="padding-top: 40px;">
+    <div class="section-container">
+        <div class="features-grid">
+
+            <div class="feature-card" th:each="categoria : ${categories}">
+
+                <div th:if="${completedCategoryIds.contains(categoria.id)}" class="status-badge status-completed">
+                    ✓ Completato
+                </div>
+                <div th:unless="${completedCategoryIds.contains(categoria.id)}" class="status-badge status-pending">
+                    Da fare
+                </div>
+
+                <h3 class="feature-title" th:text="${categoria.nome}">Nome Categoria</h3>
+                <p class="feature-description">
+                    Mettiti alla prova con i quesiti di <span th:text="${#strings.toLowerCase(categoria.nome)}"></span>.
+                </p>
+
+                <div class="feature-time" style="margin-top: 12px; display: flex; align-items: center; gap: 8px; color: var(--text-secondary); font-size: 0.95rem;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="color: var(--primary-color);">
+                        <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
+                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
+                    </svg>
+                    <span>
+                        Tempo: <strong th:text="${categoria.hour + 'h ' + categoria.remainMinute + 'm'}">1h 30m</strong>
+                    </span>
+                </div>
+
+                <div style="margin-top: var(--space-24);">
+                    <a th:href="@{/quiz(id=${categoria.id})}" class="btn" style="width: 100%; text-align: center;"
+                       th:classappend="${completedCategoryIds.contains(categoria.id)} ? 'btn-secondary' : 'btn-primary'"
+                       th:text="${completedCategoryIds.contains(categoria.id)} ? 'Ripeti Quiz' : 'Inizia Quiz'">
+                        Azione
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<div th:replace="~{fragments/footer}"></div>
+
+<script>
+    // Effetto ombra header allo scroll
+    window.addEventListener('scroll', () => {
+        const header = document.querySelector('.header');
+        if (header) {
+            if (window.scrollY > 10) {
+                header.style.boxShadow = 'var(--shadow-md)';
+            } else {
+                header.style.boxShadow = 'none';
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

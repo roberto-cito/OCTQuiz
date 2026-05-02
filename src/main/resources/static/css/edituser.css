@@ -1,0 +1,72 @@
+/* Layout specifico pagina Account */
+.account-section {
+    margin-top: 100px;
+    padding-top: 40px;
+}
+
+.account-container {
+    max-width: 900px;
+}
+
+.account-section .section-header {
+    text-align: left;
+    margin-bottom: 24px;
+}
+
+.account-section .section-title {
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    margin-bottom: 8px;
+}
+
+.account-section .section-description {
+    margin: 0;
+}
+
+/* Messaggi / stati */
+.account-section .status-badge.status-completed {
+    display: block;
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.account-section .error-message {
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+/* Utility */
+.mt-16 {
+    margin-top: var(--space-16);
+}
+
+/* Danger semantics */
+.danger-title {
+    color: #b91c1c;
+}
+
+.btn-danger-outline {
+    border-color: #b91c1c;
+    color: #b91c1c;
+}
+
+.btn-danger-outline:hover,
+.btn-danger-outline:focus {
+    background-color: rgba(185, 28, 28, 0.08);
+    border-color: #b91c1c;
+    color: #991b1b;
+}
+
+.locked-input {
+    background-color: #f3f4f6; /* Grigio chiaro */
+    cursor: not-allowed;       /* Cursore di divieto */
+    color: #6b7280;           /* Testo leggermente più chiaro */
+    border-color: #e5e7eb;
+}
+
+.input-help-text {
+    font-size: 0.85rem;
+    color: #6b7280;
+    margin-top: 6px;
+    margin-bottom: 0;
+    font-style: italic;
+}

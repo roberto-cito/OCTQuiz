@@ -1,0 +1,55 @@
+.prequiz-container {
+    max-width: 800px;
+    margin: 120px auto 40px;
+    padding: 0 var(--space-20);
+}
+.instruction-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-32);
+    box-shadow: var(--shadow-lg);
+}
+.instruction-title {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--space-24);
+    color: var(--color-text);
+    text-align: center;
+}
+.instruction-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-16);
+    margin-bottom: var(--space-20);
+}
+.instruction-icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    color: var(--color-primary);
+}
+.instruction-text {
+    font-size: var(--font-size-lg);
+    color: var(--color-text-secondary);
+}
+.time-highlight {
+    color: var(--color-primary);
+    font-weight: var(--font-weight-bold);
+}
+.warning-box {
+    background: rgba(217, 83, 79, 0.1);
+    border-left: 4px solid var(--color-error);
+    padding: var(--space-16);
+    margin: var(--space-24) 0;
+    border-radius: 4px;
+}
+.warning-text {
+    color: var(--color-error);
+    font-weight: var(--font-weight-medium);
+    font-size: 0.95rem;
+}
+.action-area {
+    margin-top: var(--space-32);
+    text-align: center;
+}

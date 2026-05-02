@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCT - Privacy Policy</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/privacy.css}">
+    <link rel="icon" type="image/png" th:href="@{/photo/logo.png}">
+</head>
+<body>
+
+<header th:replace="${isLogged}
+    ? ~{fragments/header :: logged(user=${user})}
+    : ~{fragments/header :: public}">
+</header>
+
+<!-- Main Content -->
+<div style="margin-top: 100px;"> <!-- Spacing for fixed header -->
+    <section class="privacy-section">
+        <h1 class="privacy-title">Informativa sulla Privacy</h1>
+        <p class="privacy-date">Ultimo aggiornamento: 4 Febbraio 2026</p>
+
+        <div class="privacy-content">
+            <h2>1. Introduzione</h2>
+            <p>La tua privacy è importante per noi. Questa informativa descrive come OCT Quiz ("noi", "ci", o "nostro") raccoglie, utilizza e protegge le tue informazioni personali quando utilizzi la nostra piattaforma di allenamento.</p>
+
+            <h2>2. Dati Raccolti</h2>
+            <p>Raccogliamo le seguenti tipologie di dati:</p>
+            <ul>
+                <li><strong>Dati di Registrazione:</strong> Nome, cognome ed indirizzo email forniti al momento della creazione dell'account.</li>
+                <li><strong>Dati di Utilizzo:</strong> Informazioni sulle tue sessioni di quiz, punteggi, categorie completate e progressi.</li>
+                <li><strong>Dati Tecnici:</strong> Indirizzo IP, tipo di browser e dati di navigazione per garantire la sicurezza e il funzionamento del sito.</li>
+                <li><strong>Statistiche Anonime:</strong> Dati aggregati sulle performance nei quiz (es. risposte corrette/errate per categoria) che non sono riconducibili al singolo utente, utilizzati per migliorare la qualità del servizio.</li>
+            </ul>
+
+            <h2>3. Finalità del Trattamento</h2>
+            <p>Utilizziamo i tuoi dati per:</p>
+            <ul>
+                <li>Gestire il tuo account e permetterti l'accesso alla piattaforma.</li>
+                <li>Monitorare i tuoi progressi e fornirti statistiche di allenamento.</li>
+                <li>Inviare comunicazioni di servizio (es. recupero password, conferme di registrazione).</li>
+                <li>Migliorare la qualità dei nostri quiz e del servizio offerto tramite l'analisi di statistiche anonime.</li>
+            </ul>
+
+            <h2>4. Condivisione dei Dati</h2>
+            <p>I tuoi dati personali non verranno mai venduti a terze parti. Potremmo condividere le tue informazioni solo con:</p>
+            <ul>
+                <li>Fornitori di servizi tecnici essenziali per il funzionamento del sito (es. hosting).</li>
+                <li>Autorità competenti, qualora richiesto dalla legge.</li>
+            </ul>
+
+            <h2>5. Sicurezza dei Dati</h2>
+            <p>Adottiamo misure di sicurezza tecniche e organizzative adeguate per proteggere i tuoi dati da accessi non autorizzati, perdite o alterazioni. Le password sono memorizzate in formato criptato.</p>
+
+            <h2>6. I Tuoi Diritti</h2>
+            <p>In conformità con il GDPR, hai il diritto di:</p>
+            <ul>
+                <li>Accedere ai tuoi dati personali.</li>
+                <li>Chiedere la rettifica o la cancellazione dei tuoi dati.</li>
+                <li>Opporti al trattamento dei dati.</li>
+                <li>Richiedere la portabilità dei dati.</li>
+            </ul>
+            <p>Per esercitare questi diritti, puoi contattarci tramite la sezione Supporto.</p>
+
+            <h2>7. Cookie</h2>
+            <p>Utilizziamo cookie tecnici per garantire il corretto funzionamento della sessione di login. Non utilizziamo cookie di profilazione per scopi pubblicitari.</p>
+
+            <h2>8. Modifiche a questa Policy</h2>
+            <p>Potremmo aggiornare periodicamente questa informativa. Ti invitiamo a consultare regolarmente questa pagina per rimanere informato su come proteggiamo i tuoi dati.</p>
+        </div>
+    </section>
+</div>
+
+<div th:replace="~{fragments/footer}"></div>
+
+<!-- Modals for Public Header -->
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title">Accedi</h2>
+            <button class="modal-close" onclick="closeModal('login')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>Benvenuto! Accedi al tuo account per continuare il tuo allenamento.</p>
+            <form method="POST" th:action="@{/login}">
+                <div class="form-group">
+                    <label class="form-label" for="email">Email</label>
+                    <input type="email" id="email" name="username" class="form-input" placeholder="tua@email.it">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input type="password" id="password" name="password" class="form-input" placeholder="••••••••">
+                </div>
+                <div class="form-group" style="text-align: right;">
+                    <a href="#" onclick="openModal('forgotPassword')" class="form-link">Password dimenticata?</a>
+                </div>
+                <button type="submit" class="btn btn-primary btn-large" style="width: 100%;">
+                    Accedi
+                </button>
+                <div class="form-group" style="text-align: center; margin-top: var(--space-16);">
+                    <a href="#" onclick="openModal('register')" class="form-link">Non hai un account? Registrati</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="registerModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title">Registrati</h2>
+            <button class="modal-close" onclick="closeModal('register')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>Crea il tuo account gratuito e inizia subito il tuo percorso verso le Olimpiadi!</p>
+            <form method="post" th:action="@{/register}" th:object="${registerForm}">
+                <div class="form-group">
+                    <label class="form-label" for="registerName">Nome</label>
+                    <input type="text" id="registerName" th:field="*{registerName}" class="form-input" placeholder="Mario">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="registerSurname">Cognome</label>
+                    <input type="text" id="registerSurname" th:field="*{registerSurname}" class="form-input" placeholder="Rossi">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" th:field="*{registerEmail}" class="form-input" placeholder="tua@email.it">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="registerPassword">Password</label>
+                    <input type="password" id="registerPassword" th:field="*{registerPassword}" class="form-input" placeholder="••••••••">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="registerPasswordConfirm">Conferma Password</label>
+                    <input type="password" id="registerPasswordConfirm" th:field="*{registerPasswordConfirm}" class="form-input" placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn btn-primary btn-large" style="width: 100%;">
+                    Crea Account
+                </button>
+                <div class="form-group" style="text-align: center; margin-top: var(--space-16);">
+                    <a href="#" onclick="openModal('login')" class="form-link">Hai già un account? Accedi</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="forgotPasswordModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title">Password Dimenticata</h2>
+            <button class="modal-close" onclick="closeModal('forgotPassword')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>Inserisci il tuo indirizzo email per ricevere le istruzioni per reimpostare la password.</p>
+            <form method="post" th:action="@{/forgot-password}">
+                <div class="form-group">
+                    <label class="form-label" for="forgotPasswordEmail">Email</label>
+                    <input type="email" id="forgotPasswordEmail" name="email" class="form-input" placeholder="tua@email.it">
+                </div>
+                <button type="submit" class="btn btn-primary btn-large" style="width: 100%;">
+                    Invia Istruzioni
+                </button>
+                <div class="form-group" style="text-align: center; margin-top: var(--space-16);">
+                    <a href="#" onclick="openModal('login')" class="form-link">Torna al Login</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Modal Logic (Reused from faq.html)
+    function openModal(type) {
+        const modal = document.getElementById(type + 'Modal');
+        if (!modal) return;
+
+        document.querySelectorAll('.modal.active').forEach(activeModal => {
+            if (activeModal.id !== modal.id) {
+                closeModal(activeModal.id.replace('Modal', ''));
+            }
+        });
+
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(type) {
+        const modal = document.getElementById(type + 'Modal');
+        if (modal) {
+            modal.classList.remove('active');
+            if (!document.querySelector('.modal.active')) {
+                document.body.style.overflow = '';
+            }
+        }
+    }
+
+    document.querySelectorAll('.modal').forEach(modal => {
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModal(modal.id.replace('Modal', ''));
+            }
+        });
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            const activeModal = document.querySelector('.modal.active');
+            if (activeModal) {
+                closeModal(activeModal.id.replace('Modal', ''));
+            }
+        }
+    });
+
+    window.addEventListener('scroll', () => {
+        const header = document.querySelector('.header');
+        if(header) {
+            if (window.scrollY > 10) {
+                header.style.boxShadow = 'var(--shadow-md)';
+            } else {
+                header.style.boxShadow = 'none';
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

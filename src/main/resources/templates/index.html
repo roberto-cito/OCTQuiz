@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<th:html lang="it">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>OCT - Olimpiadi della Cultura e del Talento | Allenamento Quiz</title>
+        <link rel="stylesheet" th:href="@{/css/style.css}">
+        <link rel="icon" type="image/png" th:href="@{/photo/logo.png}">
+    </head>
+    <body>
+    <div th:replace="~{fragments/header :: public}"></div>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">
+                Preparati alle <span class="highlight">Olimpiadi della Cultura e del Talento</span>
+            </h1>
+            <p class="hero-subtitle">
+                Allenati con migliaia di quiz per superare al meglio le Olimpiadi della Cultura e del Talento
+            </p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary btn-large" onclick="openModal('register')">
+                    Inizia Subito
+                </button>
+                <button class="btn btn-secondary btn-large" onclick="openModal('login')">
+                    Accedi
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-container">
+            <div class="section-header">
+                <h2 class="section-title">Perché Sceglierci</h2>
+                <p class="section-description">
+                    Gli strumenti migliori per preparare le tue Olimpiadi della Cultura e del Talento
+                </p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">📚</span>
+                    <h3 class="feature-title">Quiz Illimitati</h3>
+                    <p class="feature-description">
+                        Accesso a migliaia di quiz per prepararti alle Olimpiadi
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">📊</span>
+                    <h3 class="feature-title">Statistiche Dettagliate</h3>
+                    <p class="feature-description">
+                        Monitora i tuoi progressi
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🎯</span>
+                    <h3 class="feature-title">Simulazioni Reali</h3>
+                    <p class="feature-description">
+                        Esercitati con quiz simulati come quelli ufficiali
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" style="background: var(--color-surface);">
+        <div class="section-container">
+            <div class="section-header">
+                <h2 class="section-title">Come Funziona</h2>
+                <p class="section-description">
+                    Quattro semplici passi per iniziare il tuo percorso verso il successo
+                </p>
+            </div>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">Registrati</h3>
+                    <p class="step-description">
+                        Crea il tuo account gratuito in pochi secondi
+                    </p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">Scegli la Prova</h3>
+                    <p class="step-description">
+                        Seleziona quale prova vuoi affrontare
+                    </p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3 class="step-title">Inizia l'Allenamento</h3>
+                    <p class="step-description">
+                        Accedi ai quiz e inizia a prepararti
+                    </p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h3 class="step-title">Migliora i Tuoi Risultati</h3>
+                    <p class="step-description">
+                        Traccia i progressi e raggiungi l'eccellenza
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="section-container">
+            <h2 class="cta-title">Pronto a Iniziare?</h2>
+            <p class="cta-description">
+                Unisciti a migliaia di studenti che si stanno preparando per le Olimpiadi della Cultura e del Talento
+            </p>
+            <button class="btn btn-white btn-large" onclick="openModal('register')">
+                Registrati Ora Gratis
+            </button>
+        </div>
+    </section>
+
+    <div th:replace="~{fragments/footer}"></div>
+
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Accedi</h2>
+                <button class="modal-close" onclick="closeModal('login')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Benvenuto! Accedi al tuo account per continuare il tuo allenamento.</p>
+                <form method="POST" th:action="@{/login}">
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email</label>
+                        <input type="email" id="email" name="username" class="form-input" placeholder="tua@email.it">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="password">Password</label>
+                        <div class="password-container">
+                            <input type="password" id="password" name="password" class="form-input" placeholder="••••••••">
+                            <button type="button" class="password-toggle" onclick="togglePassword('password', this)">
+                                <img th:src="@{/photo/eye.png}" alt="Mostra password">
+                            </button>
+                        </div>
+                        <div th:if="${param.error}" class="error-message">
+                            Nome utente o password non validi.
+                        </div>
+                    </div>
+                    <div class="form-group" style="text-align: right;">
+                        <a href="#" onclick="openModal('forgotPassword')" class="form-link">Password dimenticata?</a>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-large" style="width: 100%;">
+                        Accedi
+                    </button>
+                    <div class="form-group" style="text-align: center; margin-top: var(--space-16);">
+                        <a href="#" onclick="openModal('register')" class="form-link">Non hai un account? Registrati</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Registrati</h2>
+                <button class="modal-close" onclick="closeModal('register')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Crea il tuo account gratuito e inizia subito il tuo percorso verso le Olimpiadi!</p>
+                <form method="post" th:action="@{/register}" th:object="${registerForm}">
+                    <div class="form-group">
+                        <label class="form-label" for="registerName">Nome</label>
+                        <input type="text" id="registerName" th:field="*{registerName}" class="form-input" placeholder="Mario">
+                        <div th:if="${#fields.hasErrors('registerName')}" th:errors="*{registerName}" class="error-message">
+                            Errore sul campo nome
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="registerSurname">Cognome</label>
+                        <input type="text" id="registerSurname" th:field="*{registerSurname}" class="form-input" placeholder="Rossi">
+                        <div th:if="${#fields.hasErrors('registerSurname')}" th:errors="*{registerSurname}" class="error-message">
+                            Errore sul campo cognome
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="registerEmail">Email</label>
+                        <input type="email" id="registerEmail" th:field="*{registerEmail}" class="form-input" placeholder="tua@email.it">
+                        <div th:if="${#fields.hasErrors('registerEmail')}" th:errors="*{registerEmail}" class="error-message">
+                            Correggi il campo mail
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="registerPassword">Password</label>
+                        <div class="password-container">
+                            <input type="password" id="registerPassword" th:field="*{registerPassword}" class="form-input" placeholder="••••••••">
+                            <button type="button" class="password-toggle" onclick="togglePassword('registerPassword', this)">
+                                <img th:src="@{/photo/eye.png}" alt="Mostra password">
+                            </button>
+                        </div>
+                        <div th:if="${#fields.hasErrors('registerPassword')}" th:errors="*{registerPassword}" class="error-message">
+                            Errore sul campo password
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="registerPasswordConfirm">Conferma Password</label>
+                        <div class="password-container">
+                            <input type="password" id="registerPasswordConfirm" th:field="*{registerPasswordConfirm}" class="form-input" placeholder="••••••••">
+                            <button type="button" class="password-toggle" onclick="togglePassword('registerPasswordConfirm', this)">
+                                <img th:src="@{/photo/eye.png}" alt="Mostra password">
+                            </button>
+                        </div>
+                        <div th:if="${#fields.hasErrors('registerPasswordConfirm')}" th:errors="*{registerPasswordConfirm}" class="error-message">
+                            Errore sul campo conferma password
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-large" style="width: 100%;">
+                        Crea Account
+                    </button>
+                    <div class="form-group" style="text-align: center; margin-top: var(--space-16);">
+                        <a href="#" onclick="openModal('login')" class="form-link">Hai già un account? Accedi</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="otpModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Verifica Account</h2>
+                <button class="modal-close" onclick="closeModal('otp')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Abbiamo inviato un codice di verifica a 6 cifre alla tua email. Inseriscilo qui sotto per completare la registrazione.</p>
+                <form method="post" th:action="@{/confirmregister}">
+                    <div class="form-group">
+                        <label class="form-label" style="text-align: center;" for="otpCode">Codice OTP</label>
+                        <input type="text" id="otpCode" name="otpCode" class="form-input otp-input"
+                               placeholder="000000" maxlength="6" required autocomplete="one-time-code">
+                        <input type="hidden" name="registerEmailOTP" id="registerEmailOTP" th:value="${registerEmail}">
+                        <div th:if="${otpError}" class="error-message" style="text-align: center;">
+                            Codice non valido
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-large" style="width: 100%;">
+                        Verifica e Accedi
+                    </button>
+                    <div class="form-group" style="text-align: center; margin-top: var(--space-16);">
+                        <div id="resendMessage" style="display: none; margin-bottom: 10px; font-size: 0.9rem;"></div>
+                        <a href="#" onclick="resendOTP(event)" class="form-link">Non hai ricevuto il codice? Invia di nuovo</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="forgotPasswordModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Password Dimenticata</h2>
+                <button class="modal-close" onclick="closeModal('forgotPassword')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Inserisci il tuo indirizzo email per ricevere le istruzioni per reimpostare la password.</p>
+                <form method="post" th:action="@{/forgot-password}">
+                    <div class="form-group">
+                        <label class="form-label" for="forgotPasswordEmail">Email</label>
+                        <input type="email" id="forgotPasswordEmail" name="email" class="form-input" placeholder="tua@email.it">
+                    </div>
+                    <div th:if="${mailnotfound}" class="error-message" style="text-align: center;">
+                        Email non trovata
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-large" style="width: 100%;">
+                        Invia Istruzioni
+                    </button>
+                    <div class="form-group" style="text-align: center; margin-top: var(--space-16);">
+                        <a href="#" onclick="openModal('login')" class="form-link">Torna al Login</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Registrazione Completata!</h2>
+                <button class="modal-close" onclick="window.location.href='/'">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <span style="font-size: 50px; color: #10B981;">&#10003;</span>
+                </div>
+                <p style="text-align: center; margin-bottom: 20px;">
+                    Account verificato con successo.<br>Ora puoi accedere alla piattaforma.
+                </p>
+                <button class="btn btn-primary btn-large" style="width: 100%;" onclick="window.location.href='/octquiz'">
+                    Continua
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        // Modal functionality
+        function openModal(type) {
+            const modal = document.getElementById(type + 'Modal');
+            if (!modal) return;
+
+            // Close any other open modals
+            document.querySelectorAll('.modal.active').forEach(activeModal => {
+                if (activeModal.id !== modal.id) {
+                    closeModal(activeModal.id.replace('Modal', ''));
+                }
+            });
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(type) {
+            const modal = document.getElementById(type + 'Modal');
+            if (modal) {
+                modal.classList.remove('active');
+                if (!document.querySelector('.modal.active')) {
+                    document.body.style.overflow = '';
+                }
+            }
+        }
+
+        // Close modal when clicking outside
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    // Controlla se è il modale di successo, in tal caso redirect a home se clicca fuori
+                    if(modal.id === 'successModal') {
+                        window.location.href = '/octquiz';
+                    } else {
+                        closeModal(modal.id.replace('Modal', ''));
+                    }
+                }
+            });
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const activeModal = document.querySelector('.modal.active');
+                if (activeModal) {
+                    // Se è il modale di successo, ESC porta alla home
+                    if(activeModal.id === 'successModal') {
+                        window.location.href = '/octquiz';
+                    } else {
+                        closeModal(activeModal.id.replace('Modal', ''));
+                    }
+                }
+            }
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href !== '#') {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                }
+            });
+        });
+
+        // Header scroll effect
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('.header');
+            const currentScroll = window.pageYOffset;
+
+            if (currentScroll > 100) {
+                header.style.boxShadow = 'var(--shadow-md)';
+            } else {
+                header.style.boxShadow = 'none';
+            }
+
+            lastScroll = currentScroll;
+        });
+
+        function resendOTP(event) {
+            event.preventDefault();
+            const resendMessage = document.getElementById('resendMessage');
+            resendMessage.style.display = 'block';
+            resendMessage.style.color = '#3b82f6';
+            resendMessage.innerText = 'Invio codice in corso...';
+
+            const formData = new FormData();
+            formData.append('registerName', document.getElementById('registerName').value);
+            formData.append('registerSurname', document.getElementById('registerSurname').value);
+            formData.append('registerEmail', document.getElementById('registerEmail').value);
+            formData.append('registerPassword', document.getElementById('registerPassword').value);
+            formData.append('registerPasswordConfirm', document.getElementById('registerPasswordConfirm').value);
+
+            const csrfParam = /*[[${_csrf?.parameterName}]]*/ '_csrf';
+            const csrfToken = /*[[${_csrf?.token}]]*/ '';
+            if (csrfToken) {
+                formData.append(csrfParam, csrfToken);
+            }
+
+            fetch('/octquiz/retryregister', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    resendMessage.style.color = '#10B981';
+                    resendMessage.innerText = 'Codice inviato con successo!';
+                } else {
+                    resendMessage.style.color = '#EF4444';
+                    resendMessage.innerText = 'Errore durante l\'invio del codice. Riprova.';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                resendMessage.style.color = '#EF4444';
+                resendMessage.innerText = 'Si è verificato un errore di rete.';
+            });
+        }
+    </script>
+
+    <script th:if="${#fields.hasErrors('${registerForm.*}')}">
+        document.addEventListener("DOMContentLoaded", function() {
+            openModal('register');
+        });
+    </script>
+
+    <script th:if="${askOtp} or ${otpError}">
+        document.addEventListener("DOMContentLoaded", function() {
+            openModal('otp');
+        });
+    </script>
+
+    <script th:if="${otpconfirm}">
+        document.addEventListener("DOMContentLoaded", function() {
+            openModal('success');
+        });
+    </script>
+
+    <script th:if="${param.error}">
+        document.addEventListener("DOMContentLoaded", function() {
+        openModal('login');
+        });
+    </script>
+
+    <script th:if="${mailnotfound}">
+        document.addEventListener("DOMContentLoaded", function() {
+            openModal('forgotPassword');
+        });
+    </script>
+    </body>
+</th:html>

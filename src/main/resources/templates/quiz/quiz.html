@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCT - Quiz in corso</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/quiz.css}">
+    <link rel="icon" type="image/png" th:href="@{/photo/logo.png}">
+</head>
+
+<body>
+
+    <div th:replace="~{fragments/header :: logged(user=${user})}"></div>
+
+    <main class="quiz-container">
+        <!-- Sidebar -->
+        <aside class="quiz-sidebar">
+            <div class="timer-box">
+                <div class="timer-label">Tempo Rimanente</div>
+                <div id="timer">00:00:00</div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3
+                    style="font-size: var(--font-size-sm); color: var(--color-text-secondary); margin-bottom: 1rem; text-transform: uppercase;">
+                    Domande</h3>
+                <div class="question-selector" id="question-selector">
+                    <!-- Generato da JS -->
+                </div>
+            </div>
+
+            <button id="submit-quiz-btn" class="btn btn-primary" style="width: 100%; margin-top: auto;">
+                Consegna Quiz
+            </button>
+        </aside>
+
+        <!-- Main Content -->
+        <section class="quiz-main">
+            <div id="question-display">
+                <div class="question-header">
+                    <div class="question-number" id="q-num-display">Domanda 1</div>
+                    <h2 class="question-text" id="q-text-display">Caricamento domanda...</h2>
+                </div>
+
+                <img id="q-image" src="" alt="Immagine domanda" class="question-image" style="display: none;">
+                <audio id="q-audio" controls style="display: none; width: 100%; margin-top: 1rem; margin-bottom: 2rem;">
+                    Your browser does not support the audio element.
+                </audio>
+
+                <div class="options-container" id="options-list">
+                    <!-- Opzioni generate da JS -->
+                </div>
+            </div>
+
+            <div class="quiz-navigation">
+                <button id="prev-btn" class="btn btn-secondary" disabled>Precedente</button>
+                <button id="next-btn" class="btn btn-secondary">Successiva</button>
+            </div>
+        </section>
+    </main>
+
+    <div th:replace="~{fragments/footer}"></div>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const domande = /*[[${domande}]]*/[];
+        const categoriaId = /*[[${categoria.id}]]*/ 0;
+        const tempoTotaleSecondi = (/*[[${categoria.min}]]*/ 30) * 60;
+        /*]]>*/
+
+        let currentQuestionIndex = 0;
+        const userAnswers = JSON.parse(localStorage.getItem(`quiz_answers_${categoriaId}`)) || {};
+        const startTimeKey = `quiz_start_${categoriaId}`;
+        let startTime = localStorage.getItem(startTimeKey);
+
+        if (!startTime) {
+            startTime = Date.now();
+            localStorage.setItem(startTimeKey, startTime);
+        } else {
+            startTime = parseInt(startTime);
+        }
+
+        // Timer logic
+        function updateTimer() {
+            const now = Date.now();
+            const elapsedSeconds = Math.floor((now - startTime) / 1000);
+            const remainingSeconds = Math.max(0, tempoTotaleSecondi - elapsedSeconds);
+
+            if (remainingSeconds <= 0) {
+                clearInterval(timerInterval);
+                alert("Tempo scaduto! Il quiz verrà consegnato automaticamente.");
+                consegnaQuiz();
+                return;
+            }
+
+            const hours = Math.floor(remainingSeconds / 3600);
+            const minutes = Math.floor((remainingSeconds % 3600) / 60);
+            const seconds = remainingSeconds % 60;
+
+            document.getElementById('timer').textContent =
+                `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        const timerInterval = setInterval(updateTimer, 1000);
+        updateTimer();
+
+        // UI generation
+        function initQuestionSelector() {
+            const selector = document.getElementById('question-selector');
+            selector.innerHTML = '';
+            domande.forEach((_, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'q-btn';
+                if (domande[index].onlyText) {
+                    btn.classList.add('text-only');
+                } else if (userAnswers[domande[index].id]) {
+                    btn.classList.add('answered');
+                }
+                if (index === currentQuestionIndex) btn.classList.add('active');
+                btn.textContent = index + 1;
+                btn.onclick = () => goToQuestion(index);
+                selector.appendChild(btn);
+            });
+        }
+
+        function displayQuestion(index) {
+            const domanda = domande[index];
+            document.getElementById('q-num-display').textContent = `Domanda ${index + 1}`;
+            document.getElementById('q-text-display').textContent = domanda.domanda;
+
+            const img = document.getElementById('q-image');
+            img.style.display = 'none';
+
+            const audio = document.getElementById('q-audio');
+            audio.style.display = 'none';
+            audio.pause();
+
+            const optionsList = document.getElementById('options-list');
+            optionsList.innerHTML = '';
+
+            if (domanda.onlyText) {
+                const infoBox = document.createElement('div');
+                infoBox.className = 'text-only-info';
+                infoBox.innerHTML = '<p>Questa è una sezione informativa. Non è richiesta una risposta.</p>';
+                optionsList.appendChild(infoBox);
+            } else {
+                if (domanda.foto) {
+                    img.src = domanda.foto;
+                    img.style.display = 'block';
+                }
+
+                if (domanda.audio) {
+                    audio.src = domanda.audio;
+                    audio.style.display = 'block';
+                }
+
+                const opzioni = [domanda.risposta1, domanda.risposta2, domanda.risposta3, domanda.risposta4];
+                opzioni.forEach((testo, i) => {
+                    const optionIdx = i + 1;
+                    const card = document.createElement('div');
+                    card.className = 'option-card';
+                    if (userAnswers[domanda.id] == optionIdx) card.classList.add('selected');
+
+                    card.innerHTML = `
+                    <input type="radio" name="answer" value="${optionIdx}" class="option-radio" 
+                        ${userAnswers[domanda.id] == optionIdx ? 'checked' : ''}>
+                    <span class="option-text">${testo}</span>
+                `;
+
+                    card.onclick = () => selectOption(domanda.id, optionIdx);
+                    optionsList.appendChild(card);
+                });
+            }
+
+            // Update nav buttons
+            document.getElementById('prev-btn').disabled = index === 0;
+            document.getElementById('next-btn').textContent = index === domande.length - 1 ? 'Fine' : 'Successiva';
+
+            // Update selector
+            document.querySelectorAll('.q-btn').forEach((btn, i) => {
+                btn.classList.toggle('active', i === index);
+            });
+        }
+
+        function selectOption(questionId, optionIdx) {
+            userAnswers[questionId] = optionIdx;
+            localStorage.setItem(`quiz_answers_${categoriaId}`, JSON.stringify(userAnswers));
+
+            // Update UI
+            document.querySelectorAll('.option-card').forEach((card, i) => {
+                card.classList.toggle('selected', i + 1 === optionIdx);
+                const radio = card.querySelector('input');
+                if (radio) radio.checked = i + 1 === optionIdx;
+            });
+
+            const selectorBtns = document.querySelectorAll('.q-btn');
+            selectorBtns[currentQuestionIndex].classList.add('answered');
+        }
+
+        function goToQuestion(index) {
+            if (index >= 0 && index < domande.length) {
+                currentQuestionIndex = index;
+                displayQuestion(index);
+            }
+        }
+
+        document.getElementById('prev-btn').onclick = () => goToQuestion(currentQuestionIndex - 1);
+        document.getElementById('next-btn').onclick = () => {
+            if (currentQuestionIndex === domande.length - 1) {
+                if (confirm("Vuoi consegnare il quiz?")) {
+                    consegnaQuiz();
+                }
+            } else {
+                goToQuestion(currentQuestionIndex + 1);
+            }
+        };
+
+        document.getElementById('submit-quiz-btn').onclick = () => {
+            if (confirm("Sei sicuro di voler consegnare il quiz?")) {
+                consegnaQuiz();
+            }
+        };
+
+        function consegnaQuiz() {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = 'quiz/submit';
+
+            const csrfParam = /*[[${_csrf?.parameterName}]]*/ '_csrf';
+            const csrfToken = /*[[${_csrf?.token}]]*/ '';
+            if (csrfToken) {
+                const csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = csrfParam;
+                csrfInput.value = csrfToken;
+                form.appendChild(csrfInput);
+            }
+
+            const catInput = document.createElement('input');
+            catInput.type = 'hidden';
+            catInput.name = 'categoriaId';
+            catInput.value = categoriaId;
+            form.appendChild(catInput);
+
+            const answersInput = document.createElement('input');
+            answersInput.type = 'hidden';
+            answersInput.name = 'answers';
+            answersInput.value = JSON.stringify(userAnswers);
+            form.appendChild(answersInput);
+
+            document.body.appendChild(form);
+
+            localStorage.removeItem(`quiz_answers_${categoriaId}`);
+            localStorage.removeItem(`quiz_start_${categoriaId}`);
+
+            form.submit();
+        }
+
+        // Keep session alive
+        setInterval(() => {
+            fetch('/ping');
+        }, 5 * 60 * 1000); // 5 minutes
+
+        // Init
+        initQuestionSelector();
+        displayQuestion(currentQuestionIndex);
+
+    </script>
+
+</body>
+
+</html>

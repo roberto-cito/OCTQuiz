@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestione Account</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" th:href="@{/photo/logo.png}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/edituser.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: logged(user=${user})}"></div>
+
+<section class="section account-section">
+    <div class="section-container account-container">
+        <div class="section-header">
+            <h1 class="section-title">Gestione Account</h1>
+            <p class="section-description">
+                Aggiorna le tue informazioni, scarica i dati e gestisci la chiusura dell'account.
+            </p>
+        </div>
+
+        <!-- Messaggi -->
+        <div th:if="${updateSuccess}" class="status-badge status-completed">
+            Dati aggiornati con successo
+        </div>
+        <div th:if="${editPasswordSuccess}" class="status-badge status-completed">
+            Password aggiornata con successo
+        </div>
+        <div th:if="${updateError}" class="error-message" th:text="${updateError}">
+            Si è verificato un errore
+        </div>
+        <div th:if="${deleteError}" class="error-message">
+            Password errata nell'eliminazione account, controlla e riprova
+        </div>
+        <div th:if="${#fields.hasErrors('editPasswordForm')}" th:errors="*{editPasswordForm}" class="error-message">
+            Errore sul campo conferma password
+        </div>
+
+        <div class="features-grid">
+
+            <!-- Sezione: Dati Personali -->
+            <div class="feature-card">
+                <h3 class="feature-title">Dati Personali</h3>
+                <p class="feature-description">Modifica le informazioni del tuo profilo.</p>
+
+                <form method="post" th:action="@{/account/update}" class="mt-16">
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input class="form-input locked-input" type="email" th:value="${user.email}" readonly>
+                        <p class="input-help-text">
+                            Per modificare l'indirizzo email, contatta un responsabile.
+                        </p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="nome">Nome</label>
+                        <input id="nome" name="nome" class="form-input" type="text" th:value="${user.nome}" placeholder="Mario" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="cognome">Cognome</label>
+                        <input id="cognome" name="cognome" class="form-input" type="text" th:value="${user.cognome}" placeholder="Rossi" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Salva modifiche</button>
+                </form>
+            </div>
+
+            <!-- Sezione: Modifica Password -->
+            <div class="feature-card">
+                <h3 class="feature-title">Modifica Password</h3>
+                <p class="feature-description">Aggiorna la password del tuo account.</p>
+
+                <form method="post" th:action="@{/account/update-password}" th:object="${editPasswordForm}" class="mt-16">
+
+                    <input type="hidden" id="email" name="email" th:field="*{email}" th:value="${user.email}">
+
+                    <div class="form-group">
+                        <label class="form-label" for="oldPassword">Password attuale</label>
+                        <div class="password-container">
+                            <input id="oldPassword" type="password" th:field="*{oldPassword}" class="form-input" placeholder="••••••••">
+                            <button type="button" class="password-toggle" onclick="togglePassword('oldPassword', this)">
+                                <img th:src="@{/photo/eye.png}" alt="Mostra password">
+                            </button>
+                        </div>
+                        <p th:if="${#fields.hasErrors('oldPassword')}" th:errors="*{oldPassword}" class="error-message"></p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="newPassword">Nuova password</label>
+                        <div class="password-container">
+                            <input id="newPassword" type="password" th:field="*{newPassword}" class="form-input" placeholder="••••••••">
+                            <button type="button" class="password-toggle" onclick="togglePassword('newPassword', this)">
+                                <img th:src="@{/photo/eye.png}" alt="Mostra password">
+                            </button>
+                        </div>
+                        <p th:if="${#fields.hasErrors('newPassword')}" th:errors="*{newPassword}" class="error-message"></p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="confirmPassword">Conferma nuova password</label>
+                        <div class="password-container">
+                            <input id="confirmPassword" type="password" th:field="*{confirmPassword}" class="form-input" placeholder="••••••••">
+                            <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword', this)">
+                                <img th:src="@{/photo/eye.png}" alt="Mostra password">
+                            </button>
+                        </div>
+                        <p th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}" class="error-message"></p>
+                    </div>
+
+                    <div th:if="${#fields.hasGlobalErrors()}" class="error-message">
+                        <p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Aggiorna password</button>
+                </form>
+            </div>
+
+            <!-- Sezione: Esporta dati -->
+            <div class="feature-card">
+                <h3 class="feature-title">Esporta i tuoi dati</h3>
+                <p class="feature-description">Scarica una copia dei dati raccolti relativi al tuo account.</p>
+
+                <div class="mt-16">
+                    <a class="btn btn-secondary" th:href="@{/account/export}">Scarica dati (JSON)</a>
+                </div>
+            </div>
+
+            <!-- Sezione: Elimina Account -->
+            <div class="feature-card">
+                <h3 class="feature-title danger-title">Elimina account</h3>
+                <p class="feature-description">Eliminando l'account verranno rimossi i tuoi dati. Questa azione è irreversibile.</p>
+
+                <form method="post" th:action="@{/account/delete}" class="mt-16" onsubmit="return confirm('Sei sicuro di voler eliminare definitivamente il tuo account?');">
+                    <div class="form-group">
+                        <label class="form-label" for="passwordDelete">Conferma con la tua password</label>
+                        <div class="password-container">
+                            <input id="passwordDelete" name="password" class="form-input" type="password" placeholder="••••••••" required>
+                            <button type="button" class="password-toggle" onclick="togglePassword('passwordDelete', this)">
+                                <img th:src="@{/photo/eye.png}" alt="Mostra password">
+                            </button>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-secondary btn-danger-outline">Elimina Account</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<div th:replace="~{fragments/footer}"></div>
+
+</body>
+</html>

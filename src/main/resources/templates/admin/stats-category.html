@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCT - Dettaglio Statistiche</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/admin-categories.css}">
+    <link rel="stylesheet" th:href="@{/css/admin-stats.css}">
+    <link rel="icon" type="image/png" th:href="@{/photo/logo.png}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: logged(user=${user})}"></div>
+
+<main class="admin-container">
+    <div class="admin-header">
+        <h1 class="section-title" style="margin-bottom: 0;">Statistiche: <span th:text="${categoria.nome}">Categoria</span></h1>
+        <div style="display: flex; gap: var(--space-12);">
+            <form th:if="${not #lists.isEmpty(stats)}" th:action="@{/admin/remove-stat}" method="post" onsubmit="return confirm('Sei sicuro di voler eliminare tutte le statistiche per questa categoria? Questa operazione non è reversibile.');">
+                <input type="hidden" name="id" th:value="${categoria.id}">
+                <button type="submit" class="btn btn-danger">Resetta Statistiche</button>
+            </form>
+            <a th:href="@{/admin/stats}" class="btn btn-secondary">Torna Indietro</a>
+        </div>
+    </div>
+
+    <div th:if="${message}" class="alert alert-success">
+        <span th:text="${message}">Messaggio di successo</span>
+    </div>
+
+    <div class="table-container" style="padding: var(--space-24); background: #1a1a1a; color: #e2e8f0;">
+        <div th:if="${#lists.isEmpty(stats)}" class="alert alert-info" style="margin-bottom: 0;">
+            Non ci sono statistiche disponibili per questa categoria.
+        </div>
+
+        <div th:if="${not #lists.isEmpty(stats)}">
+            <div style="display: flex; flex-direction: column; gap: 40px; margin-bottom: 40px; align-items: center;">
+                <!-- Row for General Averages -->
+                <div style="width: 100%; max-width: 600px; background: #262626; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+                    <canvas id="averageChart"></canvas>
+                </div>
+                
+                <!-- Row for Questions Distribution -->
+                <div style="width: 100%; background: #262626; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+                    <canvas id="questionsChart"></canvas>
+                </div>
+
+                <!-- Row for Per-Question Average Score -->
+                <div style="width: 100%; background: #262626; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+                    <canvas id="avgScoreChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer}"></div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const rawStats = /*[[${stats}]]*/ [];
+    const questions = /*[[${domande}]]*/ [];
+
+    if (rawStats && rawStats.length > 0) {
+        const parsedStats = rawStats.map(s => JSON.parse(s));
+        const totalAttempts = parsedStats.length;
+
+        // Dark theme defaults
+        Chart.defaults.color = '#e2e8f0';
+        Chart.defaults.borderColor = '#404040';
+
+        // 1. Averages Calculation
+        let totalCorrect = 0;
+        let totalWrong = 0;
+        let totalNull = 0;
+
+        // 2. Per Question Calculation Setup
+        const questionMap = {};
+        questions.forEach(q => {
+            questionMap[q.id] = {
+                id: q.id,
+                text: q.domanda,
+                correct: 0,
+                wrong: 0,
+                null: 0,
+                totalScore: 0
+            };
+        });
+
+        parsedStats.forEach(attempt => {
+            questions.forEach(q => {
+                const qId = String(q.id);
+                const result = attempt[qId];
+
+                if (result === true) {
+                    totalCorrect++;
+                    questionMap[q.id].correct++;
+                    questionMap[q.id].totalScore += 8;
+                } else if (result === false) {
+                    totalWrong++;
+                    questionMap[q.id].wrong++;
+                    questionMap[q.id].totalScore -= 2;
+                } else {
+                    totalNull++;
+                    questionMap[q.id].null++;
+                }
+            });
+        });
+
+        const avgCorrect = (totalCorrect / totalAttempts).toFixed(2);
+        const avgWrong = (totalWrong / totalAttempts).toFixed(2);
+        const avgNull = (totalNull / totalAttempts).toFixed(2);
+
+        // Render Average Chart
+        const ctxAvg = document.getElementById('averageChart').getContext('2d');
+        new Chart(ctxAvg, {
+            type: 'doughnut',
+            data: {
+                labels: ['Corrette (Media)', 'Errate (Media)', 'Non Risposte (Media)'],
+                datasets: [{
+                    data: [avgCorrect, avgWrong, avgNull],
+                    backgroundColor: ['#22c55e', '#ef4444', '#94a3b8'],
+                    hoverOffset: 4,
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    title: {
+                        display: true,
+                        text: `Media Risposte per Tentativo (Totale tentativi: ${totalAttempts})`,
+                        font: { size: 16 }
+                    }
+                }
+            }
+        });
+
+        // Common labels and truncating
+        const truncate = (str, n) => (str && str.length > n) ? str.substr(0, n-1) + '...' : str;
+        const qLabels = questions.map(q => truncate(q.domanda, 30) || 'Domanda ' + q.id);
+
+        // Render Per Question Distribution Chart
+        const qCorrectData = questions.map(q => questionMap[q.id].correct);
+        const qWrongData = questions.map(q => questionMap[q.id].wrong);
+        const qNullData = questions.map(q => questionMap[q.id].null);
+
+        const ctxQ = document.getElementById('questionsChart').getContext('2d');
+        new Chart(ctxQ, {
+            type: 'bar',
+            data: {
+                labels: qLabels,
+                datasets: [
+                    { label: 'Corrette', data: qCorrectData, backgroundColor: '#22c55e' },
+                    { label: 'Errate', data: qWrongData, backgroundColor: '#ef4444' },
+                    { label: 'Non Risposte', data: qNullData, backgroundColor: '#94a3b8' }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: { stacked: true, grid: { display: false } },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        title: { display: true, text: 'Numero Totale di Risposte' }
+                    }
+                },
+                plugins: {
+                    title: { display: true, text: 'Distribuzione Risposte per Domanda', font: { size: 16 } },
+                    tooltip: {
+                        callbacks: {
+                            title: function(context) {
+                                return questions[context[0].dataIndex].domanda;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Render Per-Question Average Score Chart
+        const qAvgScores = questions.map(q => (questionMap[q.id].totalScore / totalAttempts).toFixed(2));
+        
+        const ctxAvgS = document.getElementById('avgScoreChart').getContext('2d');
+        new Chart(ctxAvgS, {
+            type: 'bar',
+            data: {
+                labels: qLabels,
+                datasets: [{
+                    label: 'Punteggio Medio',
+                    data: qAvgScores,
+                    backgroundColor: qAvgScores.map(v => v >= 0 ? 'rgba(34, 197, 94, 0.6)' : 'rgba(239, 68, 68, 0.6)'),
+                    borderColor: qAvgScores.map(v => v >= 0 ? '#22c55e' : '#ef4444'),
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: { grid: { display: false } },
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'Punteggio Medio (-2 a +8)' }
+                    }
+                },
+                plugins: {
+                    title: { display: true, text: 'Punteggio Medio per Domanda', font: { size: 16 } },
+                    tooltip: {
+                        callbacks: {
+                            title: function(context) {
+                                return questions[context[0].dataIndex].domanda;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+    /*]]>*/
+</script>
+
+<script>
+    window.addEventListener('scroll', () => {
+        const header = document.querySelector('.header');
+        if (header) {
+            if (window.scrollY > 10) {
+                header.style.boxShadow = 'var(--shadow-md)';
+            } else {
+                header.style.boxShadow = 'none';
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
