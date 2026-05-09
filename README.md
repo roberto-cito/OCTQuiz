@@ -29,6 +29,7 @@ Progettata per essere una piattaforma di training interattiva e gratuita, permet
 #### 📑 Indice
 *   [🏆 Il Ruolo di OCTQuiz](#-il-ruolo-di-octquiz)
 *   [📱 Moduli e Funzionalità](#-moduli-e-funzionalità)
+*   [📸 Screenshots](#-screenshots)
 *   [💻 Come Funziona il Progetto (Architettura)](#-come-funziona-il-progetto-architettura)
 *   [🛡️ Privacy e Anonimato](#️-privacy-e-anonimato)
 *   [🛠 Tech Stack](#-tech-stack)
@@ -51,6 +52,22 @@ L'applicazione è strutturata per offrire un'esperienza fluida e formativa:
 *   **Gestione Classifiche:** Calcolo dei punteggi automatizzato e generazione di classifiche generali (visibili ai ragazzi in forma anonima) e accessibili dagli amministratori tramite una dashboard dedicata.
 *   **Esportazione CSV:** Modulo amministrativo per l'esportazione dei risultati e delle statistiche globali in formato CSV, utili all'organizzazione.
 *   **Dashboard Amministrativa:** Interfaccia protetta che permette la configurazione delle prove, la gestione di quiz e classifiche e il monitoraggio dell'andamento dei test.
+
+---
+
+#### 📸 Screenshots
+
+<p align="center">
+  <img src="images/1.jpeg" width="400">
+  <img src="images/2.jpeg" width="400">
+</p>
+<p align="center">
+  <img src="images/3.jpeg" width="400">
+  <img src="images/4.jpeg" width="400">
+</p>
+<p align="center">
+  <img src="images/5.jpeg" width="400">
+</p>
 
 ---
 
